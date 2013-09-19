@@ -8,11 +8,18 @@ define(['underscore','backbone','text!./results.tmpl','text!./item.tmpl'],
       this.$el.unbind('scroll');
       this.$el.bind("scroll", function() {
         if (that.$el.scrollTop()+ that.$el.innerHeight()+3> that.$el[0].scrollHeight) {
-          that.loadscreenful();
+          if (that.displayed+10>that.results.length && that.displayed<that.totalcount) {
+            that.sandbox.emit("more","",that.results.length);
+          } else {
+            that.loadscreenful();  
+          }
         }
       });
     },
-
+    moreresult:function(data) {
+      this.results=this.results.concat(data);
+      this.loadscreenful();
+    },
     loadscreenful:function() {
       var screenheight=this.$el.innerHeight();
       var $listgroup=$(".results");
@@ -24,6 +31,7 @@ define(['underscore','backbone','text!./results.tmpl','text!./item.tmpl'],
         newitem=_.template(itemtemplate,this.results[i]);
         $listgroup.append(newitem); // this is slow  to get newitem height()
         if ($listgroup.height()-startheight>screenheight) break;
+
       }
       this.displayed=i+1;
     },
@@ -32,13 +40,19 @@ define(['underscore','backbone','text!./results.tmpl','text!./item.tmpl'],
       this.results=[];
       this.displayed=0;
       this.results=data;
-      this.$el.html(_.template (template,{count:this.results.length}));
+      this.$el.html(template);
       this.resize();
       this.loadscreenful();
-    },    
+    },
+    totalcount:function(count) {
+      this.totalcount=count;
+      this.$el.find("#totalcount").html(count)
+    },
     initialize: function() {
       $(window).resize( _.bind(this.resize,this) );
-     this.sandbox.on("searchresult",this.render,this);
+     this.sandbox.on("newresult",this.render,this);
+     this.sandbox.on("moreresult",this.moreresult,this);
+     this.sandbox.on("totalcount",this.totalcount,this);
     }
   }
 });
