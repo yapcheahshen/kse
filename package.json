@@ -1,6 +1,6 @@
 {
-  "name": "kangxizidian",
-  "description": "The Kangxi Dictionary",
+  "name": "kse",
+  "description": "Search Engine Demo",
   "version": "0.2",
   "main": "index.html",
   "single-instance":true,
@@ -12,7 +12,7 @@
  "repositories": [
        {
             "type": "git", 
-            "url": "http://github.com/ksanaforge/kangxizidian.git"
+            "url": "http://github.com/yapcheahshen/kse.git"
        }  
     ]
 }

@@ -21,8 +21,7 @@ define(['underscore','backbone','text!./results.tmpl','text!./item.tmpl'],
       var now=this.displayed||0;
       var H=0;
       for (var i=now;i<this.results.length;i++ ) {
-        newitem=_.template(itemtemplate,{text:this.results[i].text ,
-          slot:this.results[i].slot, seq:i});
+        newitem=_.template(itemtemplate,this.results[i]);
         $listgroup.append(newitem); // this is slow  to get newitem height()
         if ($listgroup.height()-startheight>screenheight) break;
       }
@@ -32,9 +31,7 @@ define(['underscore','backbone','text!./results.tmpl','text!./item.tmpl'],
       if (!data) return;
       this.results=[];
       this.displayed=0;
-      for (var i in data) {
-        this.results.push( {text:data[i],slot:i} );
-      }
+      this.results=data;
       this.$el.html(_.template (template,{count:this.results.length}));
       this.resize();
       this.loadscreenful();

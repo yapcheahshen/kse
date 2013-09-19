@@ -7,6 +7,7 @@ define(['backbone','text!../config.json'], function(Backbone,config) {
       if (!opts.db) opts.db=this.db;
       opts.showtext=true;
       opts.highlight=true;
+      opts.sourceinfo=true;
       this.model.set({tofind:opts.tofind});
       var that=this;
       yase.phraseSearch(opts,function(err,data) {
