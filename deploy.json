@@ -1,0 +1,18 @@
+{
+	"files":[
+		"kse/aura_components",
+		"kse/css",
+		"kse/index.js",
+		"kse/index.html",
+		"kse/package.json",
+		"kse/LICENSE",
+		"kse/README.md",
+		"kse/xml"
+	],
+	"osx" :[
+		"kse/run.command"
+	],
+	"win32" :[
+		"kse/run.cmd"
+	]	
+}

@@ -8,10 +8,32 @@
     <link rel="stylesheet" href="css/ui.css"></link>
   </head>
   <body>
-<div data-aura-widget="search1-widget"></div>
-<div class="mainview">
+
+<div class="mainview" style="overflow-x:hidden;">
+
+<!--	//version 1
    <div data-aura-widget="tofind-widget"></div>
+   <div data-aura-widget="search1-widget"></div>
    <div data-aura-widget="results1-widget" style="overflow:auto;height:100px"></div>
+//-->
+
+<!-- //version 2
+   <div data-aura-widget="tofind-widget"></div>
+   <div data-aura-widget="search2-widget"></div>
+   <div data-aura-widget="results2-widget" style="overflow:auto;height:100px"></div>
+//-->
+
+	<div class="row">
+  	<div class="col-3">
+      <div data-aura-widget="tofind-widget"></div>
+      <div data-aura-widget="sidetoc-widget" style="overflow:auto;height:100px"></div>
+	</div>
+	<div class="col-9">
+     <div data-aura-widget="search3-widget"></div>
+     <div data-aura-widget="results3-widget" style="overflow:auto;height:100px"></div>
+   </div>
+
+
 </div>
 </body>
 </html>
