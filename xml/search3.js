@@ -5,7 +5,7 @@
 	slotshift:7,
 	author:'yapcheahshen@gmail.com',
 	toc:{
-		"physical":["book","pb"],
+		"physical":["book","pb[n]"],
 		"logical":["sutra","chapter","section"]
 	},
 	schema:function() {
@@ -14,7 +14,7 @@
 		        .attr("chapter","n",{"depth":1})
 		     .toctag("section")
 		     .emptytag("pb")
-		     	.attr("pb","n",{"prefix":"book","depth":2,"unique":true})
+		     	.attr("pb","n",{"saveval":true,"prefix":"book","depth":2,"unique":true})
 	},
 }));
 

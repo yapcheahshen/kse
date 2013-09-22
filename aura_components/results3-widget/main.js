@@ -42,17 +42,24 @@ define(['underscore','backbone','text!./results.tmpl','text!./item.tmpl'],
       this.results=data;
       this.$el.html(template);
       this.resize();
+      this.updatecount();
       this.loadscreenful();
     },
-    totalcount:function(count) {
-      this.totalcount=count;
-      this.$el.find("#totalcount").html(count)
+    updatecount:function() {
+      this.$el.find("#totalcount").html( this.model.get("totalcount"));
+      this.$el.find("#totalhits").html( this.model.get("totalhits"));
     },
+    totalcount:function(count,hits) {
+      this.totalcount=count;
+      this.model.set({"totalcount":count,"totalhits":hits});
+    },
+    model:new Backbone.Model(),
     initialize: function() {
       $(window).resize( _.bind(this.resize,this) );
      this.sandbox.on("newresult",this.render,this);
      this.sandbox.on("moreresult",this.moreresult,this);
      this.sandbox.on("totalcount",this.totalcount,this);
+     this.model.on("change:totalcount",this.updatecount,this);
     }
   }
 });

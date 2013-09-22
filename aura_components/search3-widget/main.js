@@ -6,24 +6,31 @@ define(['backbone','text!../config.json'], function(Backbone,config) {
       var yase=this.sandbox.yase;
       opts.grouped=true;
       opts.db=this.db;
-      opts.toc=true;
+      opts.countonly=true;
       var that=this;
       yase.phraseSearch(opts,function(err,data) {
-        var total=Object.keys(data).length;
-        that.sandbox.emit('totalcount',total);
-        that.model.set("totalcount",total);
+        that.sandbox.emit('totalcount',data.count,data.hitcount);
       });
+    },
+    newsearch:function(tofind) {
+      this.model.set({"rangestart":0,"rangeend":-1});
+      this.totalcount(tofind);
+      this.dosearch(tofind);
+    },
+    setrange:function(rangestart,rangeend) {
+      tofind=this.model.get("tofind");
+      this.model.set({"rangestart":rangestart,"rangeend":rangeend});
+      this.totalcount(tofind);
+      this.dosearch(tofind,0);
     },
     dosearch:function(tofind,start) {
       if (start>this.model.get("totalcount"))return;
-      var opts={};
+      var rangestart=this.model.get("rangestart")||0;
+      var rangeend=this.model.get("rangeend")||-1;
+      var opts={showtext:true,highlight:true,sourceinfo:true,
+          rangestart:rangestart,rangeend:rangeend,
+          start:start||0, maxcount:20, db:this.db};
       var yase=this.sandbox.yase;
-      if (!opts.db) opts.db=this.db;
-      opts.showtext=true;
-      opts.highlight=true;
-      opts.sourceinfo=true;
-      opts.start=start||0;
-      opts.maxcount=20;
       opts.tofind=tofind||this.model.get("tofind");
       this.model.set({tofind:opts.tofind});
       var that=this;
@@ -31,7 +38,6 @@ define(['backbone','text!../config.json'], function(Backbone,config) {
         if (opts.start==0) that.sandbox.emit('newresult',data);
         else that.sandbox.emit('moreresult',data);
       });
-      console.log('search',opts.start)
     },
     model:new Backbone.Model(),
     initialize: function() {
@@ -40,8 +46,8 @@ define(['backbone','text!../config.json'], function(Backbone,config) {
         bootbox.alert("please set ydb in config.json")
       }
       this.sandbox.on("more",this.dosearch,this);
-      this.sandbox.on("tofind.change",this.dosearch,this) ;
-      this.sandbox.on("tofind.change",this.totalcount,this) ;
+      this.sandbox.on("tofind.change",this.newsearch,this) ;
+      this.sandbox.on("setrange",this.setrange,this)
     }
   };
 });
