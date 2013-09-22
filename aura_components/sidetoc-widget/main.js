@@ -5,6 +5,17 @@ define(['underscore','backbone','text!./sidetoc.tmpl','text!./sidetocitem.tmpl',
     events: {
       "click .list-group-item":"itemclick"
     },
+    /*
+      fork branch exercise3 
+
+      1) defer loading
+      2) get other TOC and select by dropdown  
+         hint:
+         this.sandbox.yase.getRaw([this.db,'meta','toc'],function(err,data) {
+           //return an object , keys are name of toc
+        });
+
+    */
     itemclick:function(e) {
       var item=$(e.target);
       var toc=this.model.get("toc");
@@ -42,8 +53,6 @@ define(['underscore','backbone','text!./sidetoc.tmpl','text!./sidetocitem.tmpl',
     initialize: function() {
       this.db=JSON.parse(config).db; 
       this.sandbox.on("tofind.change",this.buildtoc,this);
-
-      //this.model.on("change:toc",this.render,this);
     }
   };
 });
