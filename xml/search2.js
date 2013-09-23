@@ -5,7 +5,7 @@ console.log(require('yase').build({
 	schema:function() {
 		this.toctag(["book"])
 		     .emptytag("pb")
-		     	.attr("pb","n",{"saveval":true})
+		     	.attr("pb","n",{"saveval":true,"depth":2})
 	}
 }));
 
