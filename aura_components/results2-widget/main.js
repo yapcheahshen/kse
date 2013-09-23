@@ -44,9 +44,10 @@ define(['underscore','backbone','text!./results.tmpl','text!./item.tmpl'],
       this.resize();
       this.loadscreenful();
     },
-    totalcount:function(count) {
+    totalcount:function(count,hitcount) {
       this.totalcount=count;
-      this.$el.find("#totalcount").html(count)
+      this.$el.find("#totalcount").html(count);
+      this.$el.find("#totalhits").html(hitcount);
     },
     initialize: function() {
       $(window).resize( _.bind(this.resize,this) );
