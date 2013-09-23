@@ -1,5 +1,6 @@
 <xml src="search2-2.xml">
 <book>my book</book>
-<pb n="2"/>
-sentence six. sentence seven. sentence eight. sentence night.sentence ten.
+sentence six.<pb n="2"/>sentence seven.
+sentence eight. sentence night.
+sentence ten.
 </xml>
