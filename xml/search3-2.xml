@@ -1,0 +1,21 @@
+<xml src="search3-2.xml">
+<book>book 2</book>
+<sutra>Sutra 4</sutra>
+this is text of sutra 4
+<chapter n="1">chapter 1</chapter>
+this is text <pb n="1"/>of chapter 1 of sutra 4<p/>
+<chapter n="2">chapter 2</chapter>
+this is text of chapter 2 of sutra 4<p/>
+<sutra>Sutra 5</sutra>
+this is text of sutra 5
+<chapter n="1">chapter 1</chapter>
+this is text of chapter 1 of sutra 5<p/>
+<chapter n="2">chapter 2</chapter>
+this is text of chapter 2 of sutra 5<p/>
+<sutra>Sutra 6</sutra>
+this is text of <pb n="2"/>sutra 6<p/>
+<chapter n="1">chapter 1</chapter>
+this is text of chapter 1 of sutra 6<p/>
+<chapter n="2">chapter 2</chapter>
+this is text of chapter 2 of sutra 6<p/>
+</xml>

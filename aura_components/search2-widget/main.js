@@ -4,25 +4,24 @@ define(['backbone','text!../config.json'], function(Backbone,config) {
     totalcount:function(tofind) {
       var opts={tofind:tofind};
       var yase=this.sandbox.yase;
-      opts.grouped=true;
+      opts.countonly=true;
       opts.db=this.db;
       var that=this;
       yase.phraseSearch(opts,function(err,data) {
-        var total=Object.keys(data).length;
-        that.sandbox.emit('totalcount',total);
-        that.model.set("totalcount",total);
+        that.sandbox.emit('totalcount',data.count,data.hitcount);
+        that.model.set({"totalcount":data.count,"totalhit":data.hitcount});
       });
     },
     dosearch:function(tofind,start) {
       if (start>this.model.get("totalcount"))return;
-      var opts={};
+      var opts={db:this.db};
       var yase=this.sandbox.yase;
-      if (!opts.db) opts.db=this.db;
       opts.showtext=true;
       opts.highlight=true;
       opts.sourceinfo=true;
       opts.start=start||0;
       opts.maxcount=20;
+      opts.closesttag="pb[n]";
       opts.tofind=tofind||this.model.get("tofind");
       this.model.set({tofind:opts.tofind});
       var that=this;
@@ -34,10 +33,7 @@ define(['backbone','text!../config.json'], function(Backbone,config) {
     },
     model:new Backbone.Model(),
     initialize: function() {
-      this.db=JSON.parse(config).db; 
-      if (!this.db) {
-        bootbox.alert("please set ydb in config.json")
-      }
+      this.db=this.options.db;
       this.sandbox.on("more",this.dosearch,this);
       this.sandbox.on("tofind.change",this.dosearch,this) ;
       this.sandbox.on("tofind.change",this.totalcount,this) ;

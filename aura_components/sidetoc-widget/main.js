@@ -5,6 +5,17 @@ define(['underscore','backbone','text!./sidetoc.tmpl','text!./sidetocitem.tmpl',
     events: {
       "click .list-group-item":"itemclick"
     },
+    /*
+      fork branch exercise3 
+
+      1) defer loading
+      2) get other TOC and select by dropdown  
+         hint:
+         this.sandbox.yase.getRaw([this.db,'meta','toc'],function(err,data) {
+           //return an object , keys are name of toc
+        });
+
+    */
     itemclick:function(e) {
       var item=$(e.target);
       var toc=this.model.get("toc");
@@ -21,7 +32,7 @@ define(['underscore','backbone','text!./sidetoc.tmpl','text!./sidetocitem.tmpl',
     },
     buildtoc:function(tofind) {
       var that=this;
-      var opts={db:this.db, tofind:tofind, toc:'logical', hidenohit:true}
+      var opts={db:this.db, tofind:tofind, toc:config.toc, hidenohit:true}
       this.sandbox.yase.buildToc(opts,function(err,data){
         that.model.set("toc",data);
         that.render();
@@ -40,10 +51,9 @@ define(['underscore','backbone','text!./sidetoc.tmpl','text!./sidetocitem.tmpl',
     },
     model:new Backbone.Model(),
     initialize: function() {
-      this.db=JSON.parse(config).db; 
+      config=JSON.parse(config);
+      this.db=config.db; 
       this.sandbox.on("tofind.change",this.buildtoc,this);
-
-      //this.model.on("change:toc",this.render,this);
     }
   };
 });
