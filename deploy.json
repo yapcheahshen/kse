@@ -9,7 +9,7 @@
 		"kse/README.md",
 		"kse/xml"
 	],
-	"osx" :[
+	"darwin" :[
 		"kse/run.command"
 	],
 	"win32" :[
