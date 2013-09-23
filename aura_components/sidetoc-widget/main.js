@@ -32,7 +32,7 @@ define(['underscore','backbone','text!./sidetoc.tmpl','text!./sidetocitem.tmpl',
     },
     buildtoc:function(tofind) {
       var that=this;
-      var opts={db:this.db, tofind:tofind, toc:'logical', hidenohit:true}
+      var opts={db:this.db, tofind:tofind, toc:config.toc, hidenohit:true}
       this.sandbox.yase.buildToc(opts,function(err,data){
         that.model.set("toc",data);
         that.render();
@@ -51,7 +51,8 @@ define(['underscore','backbone','text!./sidetoc.tmpl','text!./sidetocitem.tmpl',
     },
     model:new Backbone.Model(),
     initialize: function() {
-      this.db=JSON.parse(config).db; 
+      config=JSON.parse(config);
+      this.db=config.db; 
       this.sandbox.on("tofind.change",this.buildtoc,this);
     }
   };
