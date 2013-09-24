@@ -4,6 +4,11 @@
 this is text of sutra 1 is<p/>
 <chapter n="1">chapter 1</chapter>
 this is text of chapter 1 of sutra 1.chap one/one.<p/>
+<section>sect 1</section>
+section one
+<section>sect 2</section>
+section two
+<section>sect 3</section>
 <chapter n="2">chapter 2</chapter>
 this is text of chapter 2 of sutra 1<p/>
 <pb n="1"/>
