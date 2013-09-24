@@ -53,10 +53,11 @@ define(['underscore','backbone','text!./results.tmpl','text!./item.tmpl'
         that.$el.find("#totalhits").html(hitcount);
       },500)
     },
-    gotoline:function(start) {
+    gotoline:function(start,end) {
       var that=this;
-      console.log('goto',start)
-      this.sandbox.yase.getRange({db:this.db,start:start, end:start+500},
+      console.log('goto',start);
+      if (end>start+1000) end=start+1000;
+      this.sandbox.yase.getRange({db:this.db,start:start, end:end},
         function(err,data){
           that.render(data);
 

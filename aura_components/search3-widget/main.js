@@ -18,7 +18,7 @@ define(['backbone','text!../config.json'], function(Backbone,config) {
       this.model.set({"rangestart":rangestart,"rangeend":rangeend});
       tofind=this.model.get("tofind");
       if (!tofind) {
-        this.sandbox.emit("gotoline",rangestart);
+        this.sandbox.emit("gotoline",rangestart,rangeend);
       } else {
         this.totalslot(tofind);
         this.dosearch(tofind,0);        
