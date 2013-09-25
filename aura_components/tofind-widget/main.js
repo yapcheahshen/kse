@@ -1,5 +1,5 @@
 define(['underscore','text!./tofind.tmpl'], 
-  function(_,template,config) {
+  function(_,template) {
   return {
     type: 'Backbone',
     events: {
