@@ -29,7 +29,7 @@ define(['backbone','text!../config.json'], function(Backbone,config) {
       var rangestart=this.model.get("rangestart")||0;
       var rangeend=this.model.get("rangeend")||-1;
       var opts={showtext:true,highlight:true,sourceinfo:true,
-          rangestart:rangestart,rangeend:rangeend, closesttag:"pb[n]",
+          rangestart:rangestart,rangeend:rangeend, closesttag:config.pagebreak||"pb[n]",
           start:start||0, maxcount:20, db:this.db};
       var yase=this.sandbox.yase;
       opts.tofind=tofind
@@ -43,7 +43,8 @@ define(['backbone','text!../config.json'], function(Backbone,config) {
     },
     model:new Backbone.Model(),
     initialize: function() {
-      this.db=JSON.parse(config).db; 
+      config=JSON.parse(config);
+      this.db=config.db; 
       if (!this.db) {
         bootbox.alert("please set ydb in config.json")
       }
