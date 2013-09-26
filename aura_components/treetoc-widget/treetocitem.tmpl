@@ -1,0 +1,3 @@
+<a class="list-group-item" data-n="<%=n%>">
+<%if (depth) for (var i=0;i<depth;i++){%>　<%}%><%if (haschild){%><span id="folder" class="arrow-right">　</span><%} else {%>　<%}%><%=title%>
+	<%if (hit){%><span class="badge"><%=hit%></span><%}%></a>

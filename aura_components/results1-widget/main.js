@@ -4,11 +4,11 @@ define(['underscore','backbone','text!./results.tmpl','text!./item.tmpl'],
    type:"Backbone",
     render: function (data) {
       if (!data) return;
-      this.$el.html(_.template(template,data));
+      this.$el.html(template);
       this.$el.find("#totalcount").html(data.length);
-      $div=this.$el.find(".results");
+      $results=this.$el.find(".results");
       for (var i in data) {
-        $div.append(_.template(itemtemplate,data[i]));
+        $results.append(_.template(itemtemplate,data[i]));
       }
     },
     initialize: function() {

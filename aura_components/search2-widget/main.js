@@ -1,42 +1,36 @@
-define(['backbone','text!../config.json'], function(Backbone,config) {
+define(['backbone'], function(Backbone) {
   return {
     type: 'Backbone',
-    totalcount:function(tofind) {
-      var opts={tofind:tofind};
+    totalslot:function(tofind) {
+      var opts={db:this.db,tofind:tofind,countonly:true};
       var yase=this.sandbox.yase;
-      opts.countonly=true;
-      opts.db=this.db;
       var that=this;
       yase.phraseSearch(opts,function(err,data) {
-        that.sandbox.emit('totalcount',data.count,data.hitcount);
-        that.model.set({"totalcount":data.count,"totalhit":data.hitcount});
+        that.sandbox.emit('totalslot',data.count,data.hitcount);
+        that.model.set({"totalslot":data.count,"totalhit":data.hitcount});
       });
     },
     dosearch:function(tofind,start) {
-      if (start>this.model.get("totalcount"))return;
-      var opts={db:this.db};
+      if (start>this.model.get("totalslot"))return;
       var yase=this.sandbox.yase;
-      opts.showtext=true;
-      opts.highlight=true;
-      opts.sourceinfo=true;
-      opts.start=start||0;
-      opts.maxcount=20;
-      opts.closesttag="pb[n]";
-      opts.tofind=tofind||this.model.get("tofind");
+      var opts={
+        db:this.db,showtext:true,highlight:true,sourceinfo:true,
+        start:start||0,maxcount:20,closesttag:"pb[n]",
+        tofind:tofind||this.model.get("tofind")
+      };
       this.model.set({tofind:opts.tofind});
       var that=this;
       yase.phraseSearch(opts,function(err,data) {
         if (opts.start==0) that.sandbox.emit('newresult',data);
         else that.sandbox.emit('moreresult',data);
       });
-      console.log('search',opts.start)
     },
     model:new Backbone.Model(),
     initialize: function() {
       this.db=this.options.db;
       this.sandbox.on("more",this.dosearch,this);
       this.sandbox.on("tofind.change",this.dosearch,this) ;
-      this.sandbox.on("tofind.change",this.totalcount,this) ;
+      this.sandbox.on("tofind.change",this.totalslot,this) ;
     }
   };
 });

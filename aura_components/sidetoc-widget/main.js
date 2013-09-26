@@ -6,7 +6,7 @@ define(['underscore','backbone','text!./sidetoc.tmpl','text!./sidetocitem.tmpl',
       "click .list-group-item":"itemclick"
     },
     /*
-      fork branch exercise3 
+      fork branch ex3 
 
       1) defer loading
       2) get other TOC and select by dropdown  
@@ -14,7 +14,7 @@ define(['underscore','backbone','text!./sidetoc.tmpl','text!./sidetocitem.tmpl',
          this.sandbox.yase.getRaw([this.db,'meta','toc'],function(err,data) {
            //return an object , keys are name of toc
         });
-
+      3) when tofind is empty, click on toc node show the text
     */
     itemclick:function(e) {
       var item=$(e.target);

@@ -8,7 +8,7 @@ define(['underscore','backbone','text!./results.tmpl','text!./item.tmpl'],
       this.$el.unbind('scroll');
       this.$el.bind("scroll", function() {
         if (that.$el.scrollTop()+ that.$el.innerHeight()+3> that.$el[0].scrollHeight) {
-          if (that.displayed+10>that.results.length && that.displayed<that.totalcount) {
+          if (that.displayed+10>that.results.length && that.displayed<that.totalslot) {
             that.sandbox.emit("more","",that.results.length);
           } else {
             that.loadscreenful();  
@@ -44,16 +44,19 @@ define(['underscore','backbone','text!./results.tmpl','text!./item.tmpl'],
       this.resize();
       this.loadscreenful();
     },
-    totalcount:function(count,hitcount) {
-      this.totalcount=count;
-      this.$el.find("#totalcount").html(count);
-      this.$el.find("#totalhits").html(hitcount);
+    totalslot:function(count,hitcount) {
+      var that=this;//totalslot might come later
+      setTimeout(function(){
+        that.totalslot=count;
+        that.$el.find("#totalslot").html(count);
+        that.$el.find("#totalhits").html(hitcount);
+      },500)
     },
     initialize: function() {
       $(window).resize( _.bind(this.resize,this) );
      this.sandbox.on("newresult",this.render,this);
      this.sandbox.on("moreresult",this.moreresult,this);
-     this.sandbox.on("totalcount",this.totalcount,this);
+     this.sandbox.on("totalslot",this.totalslot,this);
     }
   }
 });

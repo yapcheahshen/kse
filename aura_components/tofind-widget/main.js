@@ -1,5 +1,5 @@
 define(['underscore','text!./tofind.tmpl'], 
-  function(_,template,config) {
+  function(_,template) {
   return {
     type: 'Backbone',
     events: {
@@ -11,9 +11,7 @@ define(['underscore','text!./tofind.tmpl'],
         this.timer=setTimeout(function(){
           var tofind=that.$("#tofind").val();
           that.sandbox.emit('tofind.change',tofind);
-          if  (tofind) {
-            localStorage.setItem("tofind",tofind);
-          }
+          localStorage.setItem("tofind",tofind);
         },300);
     },
     render:function() {
