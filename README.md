@@ -1,4 +1,4 @@
 kse
 ===
 
-Ksana Search Engine sample interface
+Ksana Search Engine sample interface, needed by scaffold
