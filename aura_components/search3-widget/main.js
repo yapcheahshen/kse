@@ -16,10 +16,9 @@ define(['backbone','text!../config.json'], function(Backbone,config) {
     },
     setrange:function(rangestart,rangeend) {
       this.model.set({"rangestart":rangestart,"rangeend":rangeend});
+      this.sandbox.emit("gotoline",rangestart,rangeend);
       tofind=this.model.get("tofind");
-      if (!tofind) {
-        this.sandbox.emit("gotoline",rangestart,rangeend);
-      } else {
+      if (tofind) {
         this.totalslot(tofind);
         this.dosearch(tofind,0);        
       }
@@ -32,9 +31,10 @@ define(['backbone','text!../config.json'], function(Backbone,config) {
           rangestart:rangestart,rangeend:rangeend, closesttag:config.pagebreak||"pb[n]",
           start:start||0, maxcount:20, db:this.db};
       var yase=this.sandbox.yase;
-      if (tofind) opts.tofind=tofind;
-      if (typeof opts.tofind=='undefined') opts.tofind=this.model.get("tofind");
-      else this.model.set({tofind:opts.tofind});
+      opts.tofind=tofind;
+      if (typeof tofind=='undefined') opts.tofind=this.model.get("tofind");
+      this.model.set({tofind:opts.tofind});
+      if (!opts.tofind) return;
       var that=this;
       yase.phraseSearch(opts,function(err,data) {
         if (opts.start==0) that.sandbox.emit('newresult',data);

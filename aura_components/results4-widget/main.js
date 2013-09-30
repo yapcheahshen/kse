@@ -56,15 +56,6 @@ define(['underscore','backbone','text!./results.tmpl','text!./item.tmpl'
         that.$el.find("#totalhits").html(hitcount);
       },500)
     },
-    gotoline:function(start,end) {
-      var that=this;
-      //console.log('goto',start);
-      if (end>start+300) end=start+300;
-      this.sandbox.yase.getRange({db:this.db,start:start, end:end},
-        function(err,data){
-          that.render(data);
-      });
-    },
 
     initialize: function() {
      this.config=JSON.parse(config);
@@ -74,7 +65,6 @@ define(['underscore','backbone','text!./results.tmpl','text!./item.tmpl'
      this.sandbox.on("newresult",this.render,this);
      this.sandbox.on("moreresult",this.moreresult,this);
      this.sandbox.on("totalslot",this.totalslot,this);
-     this.sandbox.on("gotoline",this.gotoline,this);
     }
   }
 });
