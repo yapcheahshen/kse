@@ -32,9 +32,9 @@ define(['backbone','text!../config.json'], function(Backbone,config) {
           rangestart:rangestart,rangeend:rangeend, closesttag:config.pagebreak||"pb[n]",
           start:start||0, maxcount:20, db:this.db};
       var yase=this.sandbox.yase;
-      opts.tofind=tofind
-      if (typeof opts.tofind=='undefined') opts.tofindthis.model.get("tofind");
-      this.model.set({tofind:opts.tofind});
+      if (tofind) opts.tofind=tofind;
+      if (typeof opts.tofind=='undefined') opts.tofind=this.model.get("tofind");
+      else this.model.set({tofind:opts.tofind});
       var that=this;
       yase.phraseSearch(opts,function(err,data) {
         if (opts.start==0) that.sandbox.emit('newresult',data);

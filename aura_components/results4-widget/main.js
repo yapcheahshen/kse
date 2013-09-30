@@ -6,8 +6,9 @@ define(['underscore','backbone','text!./results.tmpl','text!./item.tmpl'
     resize:function() {
       var that=this;
       var space=parseInt(this.options.space)||0;
-      this.$el.css("height", (window.innerHeight - this.$el.offset().top -18-space) 
-        +"px");
+      var parentheight=this.$el.parent().height();
+      if (!parentheight) parentheight=this.$el.parent().parent().height();
+      this.$el.css("height", (parentheight) +"px");
       this.$el.unbind('scroll');
       this.$el.bind("scroll", function() {
         if (that.$el.scrollTop()+ that.$el.innerHeight()+3> that.$el[0].scrollHeight) {
@@ -57,18 +58,19 @@ define(['underscore','backbone','text!./results.tmpl','text!./item.tmpl'
     },
     gotoline:function(start,end) {
       var that=this;
-      console.log('goto',start);
-      if (end>start+1000) end=start+1000;
+      //console.log('goto',start);
+      if (end>start+300) end=start+300;
       this.sandbox.yase.getRange({db:this.db,start:start, end:end},
         function(err,data){
           that.render(data);
-
       });
     },
+
     initialize: function() {
-      config=JSON.parse(config);
-      this.db=config.db;
-      $(window).resize( _.bind(this.resize,this) );
+     this.config=JSON.parse(config);
+     this.db=this.config.db;
+
+     $(window).resize( _.bind(this.resize,this) );
      this.sandbox.on("newresult",this.render,this);
      this.sandbox.on("moreresult",this.moreresult,this);
      this.sandbox.on("totalslot",this.totalslot,this);
