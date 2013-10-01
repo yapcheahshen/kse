@@ -1,4 +1,6 @@
 {
 	"db":"search3",
-	"toc":"logical"
+	"toc":"logical",
+	"tabui":[{"name":"tofind","widget":"tofind-widget","keep":true},
+	{"name":"tofind2","widget":"tofind-widget"}]
 }

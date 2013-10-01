@@ -3,6 +3,7 @@ define(['underscore','backbone','aura'], function(_,Backbone,Aura) {
   var app=Aura({debug: { enable: true}});
   //app.registerWidgetsSource('aura', '../node_webkit/auraext');
   app.components.addSource('aura', '../node_webkit/auraext');
+  app.components.addSource('kse', './aura_components');
 
     app.use('../node_webkit/auraext/aura-backbone')
     .use('../node_webkit/auraext/aura-yadb')

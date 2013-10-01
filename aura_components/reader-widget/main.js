@@ -1,30 +1,22 @@
-define(['underscore','text!./tofind.tmpl'], 
+define(['underscore','text!./template.tmpl'], 
   function(_,template) {
   return {
     type: 'Backbone',
-    events: {
-    	"keyup #tofind":"dosearch",
-    },
-    dosearch:function() {
-        if (this.timer) clearTimeout(this.timer);
-        var that=this;
-        this.timer=setTimeout(function(){
-          var tofind=that.$("#tofind").val();
-          that.sandbox.emit('tofind.change',tofind);
-          localStorage.setItem("tofind",tofind);
-        },300);
+    newtab:function(e) {
+      var opts={tabsid:this.readerid,name:'abc',widget:'text-widget@kse'};
+      this.sandbox.emit("newtab",opts);
     },
     render:function() {
-      this.html(_.template(template,{ value:this.options.value||""}) );
-      this.$el.find("#tofind").focus();
+      var opts={
+        tabswidget:this.options.tabsWidget||"tabtexts-widget@kse",
+        textwidget:this.options.textWidget||"text-widget@kse"
+      }
+      this.readerid=opts.readerid='reader-'+_.uniqueId();
+      this.html(_.template(template,opts) );
     },
     initialize: function() {
      	this.render();
       var that=this;
-      setTimeout(function(){
-        that.$("#tofind").val(localStorage.getItem("tofind"));
-        that.dosearch();
-      },100)
     }
   };
 });
