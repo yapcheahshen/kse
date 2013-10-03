@@ -8,6 +8,7 @@ define(['underscore','backbone','aura'], function(_,Backbone,Aura) {
     app.use('../node_webkit/auraext/aura-backbone')
     .use('../node_webkit/auraext/aura-yadb')
     .use('../node_webkit/auraext/aura-yase')
+    .use('../node_webkit/auraext/aura-toc')
     //.use('../node_webkit/auraext/aura-module')    
     .start({ widgets: 'body' }).then(function() {
     	console.log('Aura Started');

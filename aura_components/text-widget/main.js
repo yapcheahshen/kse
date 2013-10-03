@@ -13,7 +13,7 @@ define(['underscore','backbone','text!./text.tmpl','text!../config.json'],
       this.$el.css("height", (parentheight) +"px");      
     },
     render:function() {
-      this.html(_.template(template,{text:"default text"+_.uniqueId()}) );
+      this.html(_.template(template,{text:"default text<br/>default text<br/>default text<br/>default text<br/>default text<br/>default text<br/>default text"+_.uniqueId()}) );
       this.resize();
     },
     gotoline:function(start,end) {
