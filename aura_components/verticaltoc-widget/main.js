@@ -24,7 +24,7 @@ define(['underscore','backbone',
             if ( seq==toctree.lineage[i]) {
               node.active=true;
             } 
-            if (seq<toc.length && toc[seq+1].depth==toc[seq].depth+1) {
+            if (seq<toc.length-1 && toc[seq+1].depth==toc[seq].depth+1) {
               node.haschild=true;
             }
             toctree[i][j]=node;
@@ -44,6 +44,7 @@ define(['underscore','backbone',
       })
     },
     render:function(upto) {
+      /*TODO: render only children*/
       var toc=this.model.get("toc");
       var toctree=this.model.get("toctree");
       var res="";
@@ -58,7 +59,14 @@ define(['underscore','backbone',
         $toc.append(items);
       }
       
-
+      //hide the vertical scrollbar
+      var divs=$toc.find(".listgroupdiv");
+      for (var i=0;i<divs.length;i++){
+        var $div=$(divs[i]);
+        var w=$div.parent().width();
+        $div.width(w+17);
+        $div.parent().width(w);
+      };
     },
     model:new Backbone.Model(),
     initialize: function() {
