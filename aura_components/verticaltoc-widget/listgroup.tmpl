@@ -3,7 +3,7 @@
 <div class="listgroupdiv" style="height:<%=height%>px;overflow:scroll;overflow-x:hidden">
 <ul class="list-group">
 	<%for (var i in tree) {%>
-	<a data-slot="<%=tree[i].slot%>" class="list-group-item<%if(tree[i].active){%> active<%}%><%if(tree[i].haschild){%> submenu<%}%>"><%=tree[i].head%><%if (tree[i].hit){%><span class="badge"><%=tree[i].hit%></span><%}%></a>
+	<a data-slot="<%=tree[i].slot%>" class="list-group-item<%if(tree[i].active){%> active<%}%><%if(tree[i].haschild){%> submenu<%}%>"><%=tree[i].head%><%if (tree[i].hit){%><span class="hit"><%=tree[i].hit%></span><%}%></a>
 	<%}%>
 </ul>
 </div>

@@ -1,6 +1,6 @@
 define(['underscore','backbone',
   'text!./template.tmpl','text!./dropdown.tmpl','text!./listgroup.tmpl','text!../config.json'], 
-  function(_,Backbone,template,dropowntemplate,listgrouptemplate,config) {
+  function(_,Backbone,template,dropdowntemplate,listgrouptemplate,config) {
   return {
     type: 'Backbone',
     events: {
@@ -9,6 +9,7 @@ define(['underscore','backbone',
 
     itemclick:function(e) {
       var item=$(e.target);
+      if (e.target.tagName!='A') item=item.parent();
       var toc=this.model.get("toc");
       var slot=parseInt(item.attr('data-slot'));
       var toctree=this.sandbox.flattoc.goslot(slot);
@@ -20,13 +21,9 @@ define(['underscore','backbone',
           i=parseInt(i);
           for (var j=0;j<toctree[i].length;j++) {
             var seq=toctree[i][j];
-            var node=JSON.parse(JSON.stringify(toc[seq]));
-            if ( seq==toctree.lineage[i]) {
-              node.active=true;
-            } 
-            if (seq<toc.length-1 && toc[seq+1].depth==toc[seq].depth+1) {
-              node.haschild=true;
-            }
+            var node=toc[seq];//JSON.parse(JSON.stringify(toc[seq]));
+            node.active= ( seq==toctree.lineage[i]) ;
+            node.haschild= (seq<toc.length-1 && toc[seq+1].depth==toc[seq].depth+1) 
             toctree[i][j]=node;
           }
         }
@@ -43,6 +40,12 @@ define(['underscore','backbone',
         that.render(0);
       })
     },
+    findactive:function(toctree) {
+      for (var i=0;i<toctree.length;i++) {
+        if (toctree[i].active) return i;
+      }
+      return -1;
+    },
     render:function(upto) {
       /*TODO: render only children*/
       var toc=this.model.get("toc");
@@ -50,12 +53,15 @@ define(['underscore','backbone',
       var res="";
       var items=[];
       this.html(template);
-      var itemtemplate=listgrouptemplate;
+      
       $toc=this.$el.find("#toctree");
       for (var i in toctree) {
         if (isNaN(parseInt(i))) continue;
         var obj={tree:toctree[i],width:200,height:150};
-        var items=_.template( itemtemplate , obj);
+
+        obj.active=this.findactive(toctree[i]);
+        console.log(obj.active)
+        var items=_.template( this.itemtemplate , obj);
         $toc.append(items);
       }
       
@@ -70,6 +76,8 @@ define(['underscore','backbone',
     },
     model:new Backbone.Model(),
     initialize: function() {
+      var itemstyle=this.options.itemStyle || "listgroup";
+      this.itemtemplate=eval(itemstyle+"template");
       this.config=JSON.parse(config);
       this.db=this.config.db; 
       this.sandbox.on("tofind.change",this.buildtoc,this);
