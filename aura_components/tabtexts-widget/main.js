@@ -53,11 +53,11 @@ define(['underscore','backbone','text!../config.json',
 
       this.$el.find("#tabs").append( _.template(tabtemplate,opts));
       var tabcontent=this.$el.find(".tab-content");
-      var newtab=$('<div id="'+tabid+'" class="tab-pane"><div style="overflow:auto" data-aura-widget="'+widget+'"></div></div>');
+      var newtab=$('<div id="'+tabid+'" class="tab-pane"><div style="overflow-x:hidden" data-aura-widget="'+widget+'"></div></div>');
       tabcontent.append(newtab);
       newtab.data('model',m);
       this.sandbox.start(tabcontent.find("#"+tabid));
-      this.$el.find("#tabs a[href=#"+tabid+"]").click();
+      if (m.get("focus")) this.$el.find("#tabs a[href=#"+tabid+"]").click();
     },
     createtabs:function(str) {
       if (!str) return;
@@ -66,17 +66,19 @@ define(['underscore','backbone','text!../config.json',
         var w=tabs[i].split('|')
         var widget=w[0];
         var name=w[1]||"noname";
-        this.tabs.add({widget:widget,name:name});
+        this.tabs.add({widget:widget,name:name,keep:true});
       }
     },
     newtab:function(opts) {
       if (opts.tabsid!=this.$el.attr('id')) return;//no my business
       this.tabs.add(opts);
     },
-    inittab:function(arr) {
-      for (var i in arr) {
-        this.tabs.add(arr[i]);
+    inittab:function(setting) {
+      var tabs=setting.split(',');
+      for (var i in tabs) {
+        this.createtabs(tabs[i]);
       }
+      this.$el.find("#tabs a").first().click(); //switch back to first page
     },
     initialize: function() {
       $(window).resize( _.bind(this.resize,this) );
@@ -86,9 +88,7 @@ define(['underscore','backbone','text!../config.json',
       this.tabs.on("add",this.addtab,this);
       this.tabs.on("remove",this.removetab,this);
       this.sandbox.on("newtab",this.newtab,this);
-      //var tabs=this.options.tabs;
      	this.render();
-      //this.createtabs(tabs);
       var that=this;
       setTimeout(function(){
         if (that.options.initTab) {
