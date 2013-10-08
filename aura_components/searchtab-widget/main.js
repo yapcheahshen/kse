@@ -25,7 +25,7 @@ define(['backbone','text!./template.tmpl','text!./itemtemplate.tmpl','text!../co
       var pillcontent=this.$el.find(".pill-content");
       var newpill=$('<div id="'+pillid+'" class="pill-pane"><div style="overflow-x:hidden" data-aura-widget="'+widget+'"></div></div>');
       pillcontent.append(newpill);
-      this.sandbox.start(pillcontent.find("#"+pillid));
+      //this.sandbox.start(pillcontent.find("#"+pillid)); //parent container will start me
   	},
 
     createtabs:function(tabs) {

@@ -87,6 +87,7 @@ define(['underscore','backbone','text!../config.json',
       this.tabs=new  Backbone.Collection();
       this.tabs.on("add",this.addtab,this);
       this.tabs.on("remove",this.removetab,this);
+      
       this.sandbox.on("newtab",this.newtab,this);
      	this.render();
       var that=this;

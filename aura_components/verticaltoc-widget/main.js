@@ -11,9 +11,15 @@ define(['underscore','backbone',
       var item=$(e.target);
       if (e.target.tagName!='A') item=item.parent();
       var toc=this.model.get("toc");
-      var slot=parseInt(item.attr('data-slot'));
+      var slot=parseInt(item.data('slot'));
       var toctree=this.sandbox.flattoc.goslot(slot);
+      item.siblings().removeClass('active');
+      item.addClass('active');
+
+      this.model.set("updatedepth",item.data('depth'));
       this.model.set("toctree",this.filltoc(toc,toctree));
+      this.sandbox.emit("setslot",slot);
+      e.preventDefault();
     },
     filltoc:function(toc,toctree) {
         for (var i in toctree) {
@@ -52,12 +58,22 @@ define(['underscore','backbone',
       var toctree=this.model.get("toctree");
       var res="";
       var items=[];
-      this.html(template);
+      var updatedepth=this.model.get("updatedepth")||-1;
+      if (updatedepth==-1) this.html(template);
+
       
       $toc=this.$el.find("#toctree");
+      $container=this.$el;
+
+      $needupdate=$toc.find("div[data-depth]").filter(function(){return $(this).attr('data-depth')>updatedepth});
+      $needupdate.remove();
+
       for (var i in toctree) {
         if (isNaN(parseInt(i))) continue;
-        var obj={tree:toctree[i],width:200,height:150};
+        i=parseInt(i);
+        if (i<=updatedepth) continue;
+
+        var obj={depth:i,tree:toctree[i],width:200,height:200};
 
         obj.active=this.findactive(toctree[i]);
         console.log(obj.active)
@@ -69,7 +85,7 @@ define(['underscore','backbone',
       var divs=$toc.find(".listgroupdiv");
       for (var i=0;i<divs.length;i++){
         var $div=$(divs[i]);
-        var w=$div.parent().width();
+        var w=$div.parent().width() || 150;
         $div.width(w+17);
         $div.parent().width(w);
       };

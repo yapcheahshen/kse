@@ -7,7 +7,7 @@
 
 <ul class="dropdown-menu" role="menu">
 	<%for (var i in tree) {%>
-	<li><a href="#" data-slot="<%=tree[i].slot%>" class="list-group-item<%if(tree[i].active){%> active<%}%>"><%=tree[i].head%><%if (tree[i].hit){%><span class="hit"><%=tree[i].hit%></span><%}%></a></li>
+	<li><a href="#" data-depth="<%=tree[i].depth%>" data-slot="<%=tree[i].slot%>" class="list-group-item<%if(tree[i].active){%> active<%}%>"><%=tree[i].head%><%if (tree[i].hit){%><span class="hit"><%=tree[i].hit%></span><%}%></a></li>
 	<%}%>
 </ul>
 </div>
