@@ -16,9 +16,10 @@ define(['underscore','backbone',
       item.siblings().removeClass('active');
       item.addClass('active');
 
+      this.model.set("slot",slot);
       this.model.set("updatedepth",item.data('depth'));
       this.model.set("toctree",this.filltoc(toc,toctree));
-      this.sandbox.emit("setslot",slot);
+      
       e.preventDefault();
     },
     filltoc:function(toc,toctree) {
@@ -43,7 +44,7 @@ define(['underscore','backbone',
         that.sandbox.flattoc.set(toc);
         var toctree=that.sandbox.flattoc.go(0);
         that.model.set({"toc":toc, "toctree":that.filltoc(toc,toctree)});
-        that.render(0);
+        //that.render(0);
       })
     },
     findactive:function(toctree) {
@@ -52,43 +53,44 @@ define(['underscore','backbone',
       }
       return -1;
     },
-    render:function(upto) {
-      /*TODO: render only children*/
-      var toc=this.model.get("toc");
-      var toctree=this.model.get("toctree");
-      var res="";
-      var items=[];
-      var updatedepth=this.model.get("updatedepth")||-1;
-      if (updatedepth==-1) this.html(template);
-
-      
-      $toc=this.$el.find("#toctree");
-      $container=this.$el;
-
-      $needupdate=$toc.find("div[data-depth]").filter(function(){return $(this).attr('data-depth')>updatedepth});
-      $needupdate.remove();
-
-      for (var i in toctree) {
-        if (isNaN(parseInt(i))) continue;
-        i=parseInt(i);
-        if (i<=updatedepth) continue;
-
-        var obj={depth:i,tree:toctree[i],width:200,height:200};
-
-        obj.active=this.findactive(toctree[i]);
-        console.log(obj.active)
-        var items=_.template( this.itemtemplate , obj);
-        $toc.append(items);
-      }
-      
-      //hide the vertical scrollbar
+    hidescrollbar:function() {
       var divs=$toc.find(".listgroupdiv");
       for (var i=0;i<divs.length;i++){
         var $div=$(divs[i]);
         var w=$div.parent().width() || 150;
         $div.width(w+17);
         $div.parent().width(w);
-      };
+      };      
+    },
+    render:function(upto) {
+      /*TODO: render only children*/
+      var toc=this.model.get("toc");
+      var toctree=this.model.get("toctree");
+      var res="", items=[];
+      var updatedepth=this.model.get("updatedepth")||-1;
+      if (updatedepth==-1) this.html(template);
+
+      $toc=this.$el.find("#toctree");
+      $needupdate=$toc.find("div[data-depth]").filter(function(){return $(this).attr('data-depth')>updatedepth});
+      $needupdate.remove();
+      var selectedleafnode=this.model.get('slot');
+      for (var i in toctree) {
+        if (isNaN(parseInt(i))) continue;
+        i=parseInt(i);
+        if (i<=updatedepth) continue; //no need to repaint
+
+        var obj={depth:i,tree:toctree[i],width:200,height:200};
+
+        obj.active=this.findactive(toctree[i]);
+        selectedleafnode=obj.tree[obj.active].slot;
+
+        $toc.append(_.template( this.itemtemplate , obj));
+      }
+      
+      this.model.set('slot',selectedleafnode);
+      this.sandbox.emit("dbslotselected",{db:this.db,slot:selectedleafnode});
+      
+      this.hidescrollbar();
     },
     model:new Backbone.Model(),
     initialize: function() {
