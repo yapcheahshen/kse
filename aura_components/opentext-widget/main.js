@@ -12,24 +12,26 @@ define(['underscore','backbone','text!./template.tmpl','text!./linkable.tmpl','t
         $d=$($dbs[i]);
         texts.push({db:$d.data('db'),start:$d.data('start')});
       }
-      this.sandbox.emit("newreader",texts, this.start);
+      this.sandbox.emit("newreader",texts, this.start, this.scrollto);
     },
     selected:function(opts) {
       var that=this;
       var prefix=this.linkunit;
+      var db=opts.db||this.db;
+      this.scrollto=opts.scrollto;
       
       if (prefix[prefix.length-1]==']') prefix=prefix.substring(0,prefix.length-1);
-      this.sandbox.yase.closestTag({db:this.db,tag:this.linkunit,slot:opts.slot},
+      this.sandbox.yase.closestTag({db:db,tag:this.linkunit,slot:opts.slot},
         function(err,data){
           var selector=prefix+'='+data[0].value;
           that.start=data[0].value;
           that.linkable.reset();
-          that.linkable.add({db:that.db,head:data[0].head,start:selector,active:" active"});
+          that.linkable.add({db:db,head:data[0].head,start:selector,active:" active"});
           for (var i in that.linkdb) {
             var selector=prefix+'='+data[0].value;
             that.sandbox.yase.findTag({db:that.linkdb[i], selector:selector},
               function(err,data2){
-                that.linkable.add({db:data2.db,head:data2.head,start:selector,active:""});
+                that.linkable.add({db:data2[0].db,head:data2[0].head,start:selector,active:""});
               })
           }
       });

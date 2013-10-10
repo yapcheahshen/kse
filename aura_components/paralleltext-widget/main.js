@@ -9,7 +9,7 @@ define(['underscore','backbone','text!./text.tmpl','text!../config.json'],
     render:function() {
       var coltexts=this.coltexts.toJSON();
       var h=this.getheight();
-      var opts={T:coltexts,widget:this.textwidget,height:h};
+      var opts={scrollto:this.options.scrollto,T:coltexts,widget:this.textwidget,height:h};
       this.html(_.template(template,opts) ); 
     },
     getheight:function() {

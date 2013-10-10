@@ -6,6 +6,6 @@
 
 <div class="row">
 <%for (var i in T){%>
-	<div style="height:<%=height%>px;overflow-x:hidden" class="text col-<%=T[i].col%>" data-aura-widget=<%=widget%> data-start="<%=T[i].start%>" data-db="<%=T[i].db%>"></div>
+	<div style="height:<%=height%>px;overflow-x:hidden" class="text col-<%=T[i].col%>" data-scrollto="<%=scrollto%>" data-aura-widget="<%=widget%>" data-start="<%=T[i].start%>" data-db="<%=T[i].db%>"></div>
 <%}%>
 </div>

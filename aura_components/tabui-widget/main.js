@@ -61,7 +61,12 @@ define(['underscore','backbone','text!../config.json',
 
       this.$el.find("#tabs").append( _.template(tabtemplate,opts));
       var tabcontent=this.$el.find(".tab-content");
-      var newtab=$('<div id="'+tabid+'" class="tab-pane"><div  data-viewid="'+tabid+'"data-aura-widget="'+widget+'"></div></div>');
+      var extra='';
+      var E=m.get('extra');
+      for (var i in E) {
+        extra+='data-'+i+'="'+E[i]+'" ';
+      }
+      var newtab=$('<div id="'+tabid+'" class="tab-pane"><div '+extra+' data-viewid="'+tabid+'"data-aura-widget="'+widget+'"></div></div>');
       tabcontent.append(newtab);
       
       this.sandbox.start(tabcontent.find("#"+tabid));
