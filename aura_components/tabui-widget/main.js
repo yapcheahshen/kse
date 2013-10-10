@@ -37,10 +37,15 @@ define(['underscore','backbone','text!../config.json',
       $(e.target).find('button').css('display','inline')
       $(e.relatedTarget).find('button').css('display','none');
     },
+    childresize:function() {
+      this.sandbox.emit("resize");
+    },
     resize:function() {
       var that=this;
       var space=parseInt(this.options.space)||0;
       this.$el.css("height", (window.innerHeight - this.$el.offset().top-space)+"px");
+      if (this.timer) clearTimeout(this.timer);
+      this.timer=setTimeout( function(){that.childresize()},300);      
     },    
     render:function() {
       this.html(template);

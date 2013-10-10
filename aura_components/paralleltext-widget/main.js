@@ -8,16 +8,23 @@ define(['underscore','backbone','text!./text.tmpl','text!../config.json'],
 
     render:function() {
       var coltexts=this.coltexts.toJSON();
-      var p=this.$el.parent();
-      while (!p.height()) {
-        p=p.parent();
-      }
-      var controllerheight=20;
-      var h=p.height()-this.$el.offset().top-controllerheight;
+      var h=this.getheight();
       var opts={T:coltexts,widget:this.textwidget,height:h};
-      this.html(_.template(template,opts) );
-      //set the height;
+      this.html(_.template(template,opts) ); 
     },
+    getheight:function() {
+      var p=$(".mainview");
+      return p.height()-this.$el.offset().top-this.controllerheight;      
+    },
+    resize:function() {
+      var texts=this.$el.find("div.text");
+      var h=this.getheight();
+      for (var i=0;i<texts.length;i++) {
+        $(texts[i]).css('height',h);
+      }
+      console.log('resize');
+    },
+
     autolayout:function(coltexts) {
       var distributes={1:12,2:6,3:4,4:3};
       var col=distributes[coltexts.length];
@@ -35,9 +42,10 @@ define(['underscore','backbone','text!./text.tmpl','text!../config.json'],
     initialize: function() {
       this.config=JSON.parse(config);
       this.db=this.config.db;
+      this.controllerheight=20;
       this.textwidget=this.config.defaulttextwidget;
       this.sandbox.once("settext."+this.$el.data('viewid'),this.settext,this);
-
+      this.sandbox.on("resize",this.resize,this);
     }
   };
 });

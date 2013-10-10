@@ -6,13 +6,11 @@ define(['underscore','backbone','text!./text.tmpl','text!../config.json'],
 
     },
     render:function() {
-     // this.resize();
-    },
-    render:function() {
       var that=this;
       var yase=this.sandbox.yase;
-
-      yase.getTextByTag({db:this.db, selector:this.start},function(err,data){
+      this.html(_.template(template,{text:"loading text..."}) );
+      yase.getTextByTag({db:this.db, selector:this.start, maxslot:5000},
+        function(err,data){
           that.html(_.template(template,data) );
       })
     },

@@ -53,7 +53,7 @@ define(['underscore','backbone','text!./template.tmpl','text!./linkable.tmpl','t
       this.config=JSON.parse(config);
       this.db=this.config.db;
       this.linkdb=this.config.linkdb;
-      this.linkunit=this.config.linkunit;
+      this.linkunit=this.config.readunit;
       this.initlinkable();
       if (typeof this.linkdb=='string') this.linkdb=[this.linkdb];
       
