@@ -13,7 +13,11 @@ define(['underscore','backbone',
       var toc=this.model.get("toc");
       var slot=parseInt(item.data('slot'));
       var toctree=this.sandbox.flattoc.goslot(slot);
-      item.siblings().removeClass('active');
+      var siblings=item.siblings();
+      if (this.itemstyle=='dropdown') {
+        siblings=item.parent().parent().find("li a");
+      }
+      siblings.removeClass('active');
       item.addClass('active');
 
       this.model.set("slot",slot);
@@ -94,8 +98,8 @@ define(['underscore','backbone',
     },
     model:new Backbone.Model(),
     initialize: function() {
-      var itemstyle=this.options.itemStyle || "listgroup";
-      this.itemtemplate=eval(itemstyle+"template");
+      this.itemstyle=this.options.itemStyle || "listgroup";
+      this.itemtemplate=eval(this.itemstyle+"template");
       this.config=JSON.parse(config);
       this.db=this.config.db; 
       this.sandbox.on("tofind.change",this.buildtoc,this);

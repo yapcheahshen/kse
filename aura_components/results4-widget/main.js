@@ -5,8 +5,10 @@ define(['underscore','backbone','text!./results.tmpl','text!./item.tmpl'
    type:"Backbone",
     resize:function() {
       var that=this;
+      var texts=$("div.mainview");
+      var parentheight=texts.height();
+
       var space=parseInt(this.options.space)||0;
-      var parentheight=this.$el.parent().height();
       if (!parentheight) parentheight=this.$el.parent().parent().height();
       this.$el.css("height", (parentheight) +"px");
       this.$el.unbind('scroll');
