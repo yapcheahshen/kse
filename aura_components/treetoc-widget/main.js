@@ -20,6 +20,9 @@ define(['underscore','backbone','text!./treetoc.tmpl','text!./treetocitem.tmpl',
       var item=$(e.target);
       var toc=this.model.get("toc");
       var n=parseInt(item.attr('data-n'));
+      if (isNaN(n)) item=item.parent();
+      n=parseInt(item.attr('data-n'));
+      
       var T=toc[n], depth=T.depth;
       var rangestart=T.slot, rangeend=-1;
       for (var i=n+1;i<toc.length;i++) {

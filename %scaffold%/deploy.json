@@ -10,7 +10,7 @@
 		"%scaffold%/.gitignore",
 		"%scaffold%/LICENSE",
 		"%scaffold%/README.md",
-		"kse"
+		"kse/aura_components"
 	],
 	"osx" :[
 		"%scaffold%/run.command"

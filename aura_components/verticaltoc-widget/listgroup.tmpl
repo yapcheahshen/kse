@@ -1,0 +1,12 @@
+<div data-depth="<%=depth%>" style="height:<%=height%>px;display:inline-block;overflow:hidden;vertical-align:text-top;">
+
+<div class="listgroupdiv" style="height:<%=height%>px;overflow:scroll;overflow-x:hidden">
+<ul class="list-group">
+	<%for (var i in tree) {%>
+	<a data-depth="<%=tree[i].depth%>" data-slot="<%=tree[i].slot%>" class="list-group-item<%if(tree[i].active){%> active<%}%><%if(tree[i].haschild){%> submenu<%}%>"><%=tree[i].head%><%if (tree[i].hit){%><span class="hit"><%=tree[i].hit%></span><%}%></a>
+	<%}%>
+</ul>
+</div>
+</div>
+
+</div>
