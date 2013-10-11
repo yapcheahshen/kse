@@ -18,14 +18,12 @@ define(['underscore','backbone','text!./text.tmpl','text!../config.json'],
       yase.getTextByTag({db:this.db, selector:this.start, maxslot:5000},
         function(err,data){
           that.html(_.template(template,data) );
-          if (that.scrollto) {
-            that.$el.animate({
+          if (!that.scrollto) return;
+          that.$el.animate({
               scrollTop: $(that.scrollto).offset().top-100
-            },'slow',function(){
-              that.blink($(that.scrollto));  
-            });
-            
-          }
+          },'slow',function(){
+             that.blink($(that.scrollto));  
+          });
       })
     },
 
