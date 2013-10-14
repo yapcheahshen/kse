@@ -28,7 +28,7 @@ define(['underscore','backbone','text!./results.tmpl','text!./item.tmpl'
     },
     loadscreenful:function() {
       var screenheight=this.$el.innerHeight();
-      var $listgroup=$(".results");
+      var $listgroup=this.$el.find(".results");
       var startheight=$listgroup.height();
       if (this.displayed>=this.results.length) return;
       var now=this.displayed||0;
