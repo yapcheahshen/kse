@@ -1,6 +1,6 @@
 define(['underscore','backbone',
-  'text!./template.tmpl','text!./dropdown.tmpl','text!./listgroup.tmpl','text!../config.json'], 
-  function(_,Backbone,template,dropdowntemplate,listgrouptemplate,config) {
+  'text!./template.tmpl','text!./dropdown.tmpl','text!./listgroup.tmpl'], 
+  function(_,Backbone,template,dropdowntemplate,listgrouptemplate) {
   return {
     type: 'Backbone',
     events: {
@@ -42,7 +42,7 @@ define(['underscore','backbone',
     },
     buildtoc:function(tofind) {
       var that=this;
-      var opts={db:this.db, tofind:tofind, toc:this.config.toc, hidenohit:this.hidenohit}
+      var opts={db:this.db, tofind:tofind, toc:this.toc, hidenohit:this.hidenohit}
       this.sandbox.yase.buildToc(opts,function(err,toc){
         that.model.set("toc",toc);
         that.sandbox.flattoc.set(toc);
@@ -83,7 +83,8 @@ define(['underscore','backbone',
         i=parseInt(i);
         if (i<=updatedepth) continue; //no need to repaint
 
-        var obj={depth:i,tree:toctree[i],width:200,height:200};
+        //TODO need to read from parent
+        var obj={depth:i,tree:toctree[i],width:200,height:500};
 
         obj.active=this.findactive(toctree[i]);
         selectedleafnode=obj.tree[obj.active].slot;
@@ -97,13 +98,22 @@ define(['underscore','backbone',
       this.hidescrollbar();
     },
     model:new Backbone.Model(),
-    initialize: function() {
-      this.itemstyle=this.options.itemStyle || "listgroup";
-      this.hidenohit=JSON.parse(this.options.hidenohit || "false");
+    init:function(opts) {
+      this.db=opts.db;
+      this.toc=opts.toc;
+      this.hidenohit=opts.hidenohit;
+      this.buildtoc(opts.tofind);
+      this.itemstyle=opts.itemstyle||this.options.itemStyle ;
+
+      this.itemstyle=this.itemstyle || "listgroup";
+      this.hidenohit=JSON.parse(this.hidenohit || "false");
       this.itemtemplate=eval(this.itemstyle+"template");
-      this.config=JSON.parse(config);
-      this.db=this.config.db; 
-      this.sandbox.on("toc.reset",this.buildtoc,this);
+    },
+    initialize: function() {
+      this.groupid=this.options.groupid;
+      this.group="";
+      if (this.groupid) this.group="."+this.groupid;
+      this.sandbox.once("buildtoc"+this.group,this.init,this);
       this.model.on("change:toctree",this.render,this);
     }
   };

@@ -1,6 +1,26 @@
 define(['underscore','backbone','text!./results.tmpl','text!./item.tmpl'], 
  function(_,Backbone,template,itemtemplate) {
   return {
+   events:{
+    "mousemove .resultitem":"resultitemhover",
+    "click #opentext":"opentext"
+   },
+   opentext:function() {
+     var $listmenu=this.$el.find("#listmenu");
+     var slot=$listmenu.data('slot');
+     //convert slot to id
+     var texts=[{db:'vrimul',start:slot}];
+     this.sandbox.emit("newreader",texts, slot , this.scrollto);
+   },
+   resultitemhover:function(e) {
+    $e=$(e.target);
+    if (!$e.hasClass('resultitem')) $e=$e.parent();
+    var top=$e.offset().top;
+    var $listmenu=this.$el.find("#listmenu");
+    $listmenu.offset({top:top})
+    var slot=$e.find("[data-slot]").data("slot");
+    $listmenu.data("slot",slot);
+   },
    type:"Backbone",
     resize:function() {
       var that=this;
@@ -43,7 +63,7 @@ define(['underscore','backbone','text!./results.tmpl','text!./item.tmpl'],
       this.results=[];
       this.displayed=0;
       this.results=data;
-      this.$el.html(template);
+      this.html(template);
       this.resize();
       this.loadscreenful();
     },

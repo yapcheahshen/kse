@@ -9,7 +9,7 @@ define(['underscore','backbone','text!./text.tmpl','text!../config.json'],
     render:function() {
       var coltexts=this.coltexts.toJSON();
       var h=this.getheight();
-      var opts={scrollto:this.options.scrollto,T:coltexts,widget:this.textwidget,height:h};
+      var opts={scrollto:this.scrollto,T:coltexts,widget:this.textwidget,height:h};
       this.html(_.template(template,opts) ); 
     },
     getheight:function() {
@@ -39,13 +39,18 @@ define(['underscore','backbone','text!./text.tmpl','text!../config.json'],
       this.render();
     },
     coltexts:new Backbone.Collection(),
+    init:function(opts) {
+      this.scrollto=opts.scrollto;
+      this.settext(opts.cols);
+    },
     initialize: function() {
       this.config=JSON.parse(config);
       this.db=this.config.db;
       this.controllerheight=20;
       this.textwidget=this.config.defaulttextwidget;
-      this.sandbox.once("settext."+this.$el.data('viewid'),this.settext,this);
+      this.sandbox.once("init."+this.$el.data('viewid'),this.init,this);
       this.sandbox.on("resize",this.resize,this);
+
     }
   };
 });

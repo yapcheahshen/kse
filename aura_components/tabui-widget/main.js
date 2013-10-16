@@ -1,7 +1,7 @@
-define(['underscore','backbone','text!../config.json',
+define(['underscore','backbone',
   'text!./texts.tmpl','text!./tabtemplate.tmpl'
   ], 
-  function(_,backbone,config,template,tabtemplate) {
+  function(_,backbone,template,tabtemplate) {
   return {
     type: 'Backbone',
     events:{
@@ -94,13 +94,13 @@ define(['underscore','backbone','text!../config.json',
       for (var i in tabs) {
         var w=tabs[i].split('|')
         var widget=w[0];
-        var name=w[1];
+        var name=w[1].trim();
         if (name.length>10) name=name.substring(0,10)+'...';
         this.tabs.add({widget:widget,name:name,keep:true});
       }
     },
     newtab:function(opts) {
-      if (opts.tabsid!=this.$el.attr('id')) return;//no my business
+      if (opts.tabsid && opts.tabsid!=this.$el.attr('id')) return;//no my business
       this.tabs.add(opts);
     },
     inittab:function(setting) {
@@ -112,11 +112,10 @@ define(['underscore','backbone','text!../config.json',
     },
     initialize: function() {
       $(window).resize( _.bind(this.resize,this) );
-      this.config=JSON.parse(config);
       this.model=new Backbone.Model();
       this.tabs=new  Backbone.Collection();
       this.tabs.on("add",this.addtab,this);
-      this.tabs.on("remove",this.removetab,this);
+      //this.tabs.on("remove",this.removetab,this);
 
       this.sandbox.on("newtab",this.newtab,this);
      	this.render();
