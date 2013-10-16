@@ -25,7 +25,8 @@ define(['underscore','backbone','text!../config.json',
       }
       tab.remove();
       var tabcontent=this.$el.find(".tab-content #"+tabid);
-      var model=tabcontent.data('model');
+      //var model=tabcontent.data('model');
+      var model=this.tabs.get(tabid.substring(1));
       this.tabs.remove(model);
       tabcontent.remove();
       $('#tabs a:first').tab('show');
@@ -61,22 +62,15 @@ define(['underscore','backbone','text!../config.json',
 
       this.$el.find("#tabs").append( _.template(tabtemplate,opts));
       var tabcontent=this.$el.find(".tab-content");
-      var extra='';
-      var E=m.get('extra');
-      for (var i in E) {
-        extra+='data-'+i+'="'+E[i]+'" ';
-      }
-      var newtab=$('<div id="'+tabid+'" class="tab-pane"><div '+extra+' data-viewid="'+tabid+'"data-aura-widget="'+widget+'"></div></div>');
+      var newtab=$('<div id="'+tabid+'" class="tab-pane"><div  data-viewid="'+tabid+'"data-aura-widget="'+widget+'"></div></div>');
       tabcontent.append(newtab);
       
       this.sandbox.start(tabcontent.find("#"+tabid));
       if (m.get("focus")) this.$el.find("#tabs a[href=#"+tabid+"]").click();
 
       setTimeout(function(){
-        that.sandbox.emit("settext."+tabid,m.get('cols'));
+        that.sandbox.emit("init."+tabid,m.get('extra'));
       },100);
-            
-
     },
     createtabs:function(str) {
       if (!str) return;
@@ -84,7 +78,8 @@ define(['underscore','backbone','text!../config.json',
       for (var i in tabs) {
         var w=tabs[i].split('|')
         var widget=w[0];
-        var name=w[1]||"noname";
+        var name=w[1];
+        if (name.length>10) name=name.substring(0,10)+'...';
         this.tabs.add({widget:widget,name:name,keep:true});
       }
     },
