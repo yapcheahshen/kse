@@ -24,11 +24,11 @@ define(['underscore','backbone','text!../config.json',
         return;
       }
       tab.remove();
-      var tabcontent=this.$el.find(".tab-content #"+tabid);
+      var content=this.$el.find(".tab-content #"+tabid);
       //var model=tabcontent.data('model');
       var model=this.tabs.get(tabid.substring(1));
       this.tabs.remove(model);
-      tabcontent.remove();
+      content.remove();
       $('#tabs a:first').tab('show');
     },
     removetab:function(m)   {
@@ -44,13 +44,25 @@ define(['underscore','backbone','text!../config.json',
     resize:function() {
       var that=this;
       var space=parseInt(this.options.space)||0;
-      this.$el.css("height", (window.innerHeight - this.$el.offset().top-space)+"px");
+      var newheight=($(window).height() -space);
+      this.$el.css("height", newheight+"px");
+      var tabcontentheight=newheight-this.$el.find("#tabs").height()-5;
+
+      var tabcontent=this.$el.find(".tab-content");
+      tabcontent.height(tabcontentheight);
+      var children=tabcontent.children();
+      for (var i=0;i<children.length;i++) {
+          $(children[i]).height(tabcontentheight);
+      }
       if (this.timer) clearTimeout(this.timer);
-      this.timer=setTimeout( function(){that.childresize()},300);      
+      this.timer=setTimeout( function(){that.childresize()},200);      
     },    
     render:function() {
+      var that=this;
       this.html(template);
-      this.resize();
+      setTimeout(function() {
+        that.resize();
+      },1000);
     },
     addtab:function(m) {
       var widget=m.get('widget');
@@ -61,16 +73,20 @@ define(['underscore','backbone','text!../config.json',
       opts.closable=!opts.keep;
 
       this.$el.find("#tabs").append( _.template(tabtemplate,opts));
+      var tabcontentheight=this.$el.parent().height()-this.$el.find("#tabs").height()-5;
       var tabcontent=this.$el.find(".tab-content");
-      var newtab=$('<div id="'+tabid+'" class="tab-pane"><div data-viewid="'+tabid+'"data-aura-widget="'+widget+'"></div></div>');
+      var newtab='<div id="'+tabid+'" class="tab-pane"><div data-viewid="'+tabid+'"data-aura-widget="'+widget+'"></div></div>';
       tabcontent.append(newtab);
       
-      this.sandbox.start(tabcontent.find("#"+tabid));
+      var $newtab=tabcontent.find("#"+tabid);
+      this.sandbox.start($newtab);
+      $newtab.height(tabcontentheight);
       if (m.get("focus")) this.$el.find("#tabs a[href=#"+tabid+"]").click();
 
+      //this is stupid, need a callback when widget is initialized
       setTimeout(function(){
         that.sandbox.emit("init."+tabid,m.get('extra'));
-      },100);
+      },200);
     },
     createtabs:function(str) {
       if (!str) return;

@@ -6,13 +6,14 @@ define(['backbone'], function(Backbone) {
       var yase=this.sandbox.yase;
       var that=this;
       yase.phraseSearch(opts,function(err,data) {
-        that.sandbox.emit('totalslot'+this.group,data.count,data.hitcount);
+        that.sandbox.emit('totalslot'+that.group,data.count,data.hitcount);
       });
     },
     newsearch:function(tofind) {
       this.model.set({"rangestart":0,"rangeend":-1});
       this.totalslot(tofind);
-      this.dosearch(tofind);
+      this.model.set("tofind",tofind);
+      this.dosearch();
     },
     setrange:function(rangestart,rangeend) {
       this.model.set({"rangestart":rangestart,"rangeend":rangeend});
@@ -20,10 +21,10 @@ define(['backbone'], function(Backbone) {
       tofind=this.model.get("tofind");
       if (tofind) {
         this.totalslot(tofind);
-        this.dosearch(tofind,0);        
+        this.dosearch(0);
       }
     },
-    dosearch:function(tofind,start) {
+    dosearch:function(start) {
       if (start>this.model.get("totalslot"))return;
       var rangestart=this.model.get("rangestart")||0;
       var rangeend=this.model.get("rangeend")||-1;
@@ -32,14 +33,13 @@ define(['backbone'], function(Backbone) {
           rangestart:rangestart,rangeend:rangeend, closesttag:pagebreak,
           start:start||0, maxcount:20, db:this.db};
       var yase=this.sandbox.yase;
-      opts.tofind=tofind;
-      if (typeof tofind=='undefined') opts.tofind=this.model.get("tofind");
+      opts.tofind=this.model.get("tofind");
       this.model.set({tofind:opts.tofind});
       if (!opts.tofind) return;
       var that=this;
       yase.phraseSearch(opts,function(err,data) {
-        if (opts.start==0) that.sandbox.emit('newresult'+this.group,data);
-        else that.sandbox.emit('moreresult'+this.group,data);
+        if (opts.start==0) that.sandbox.emit('newresult'+that.group,data);
+        else that.sandbox.emit('moreresult'+that.group,data);
       });
     },
     model:new Backbone.Model(),
