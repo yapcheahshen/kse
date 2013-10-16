@@ -62,7 +62,7 @@ define(['underscore','backbone','text!../config.json',
 
       this.$el.find("#tabs").append( _.template(tabtemplate,opts));
       var tabcontent=this.$el.find(".tab-content");
-      var newtab=$('<div id="'+tabid+'" class="tab-pane"><div  data-viewid="'+tabid+'"data-aura-widget="'+widget+'"></div></div>');
+      var newtab=$('<div id="'+tabid+'" class="tab-pane"><div data-viewid="'+tabid+'"data-aura-widget="'+widget+'"></div></div>');
       tabcontent.append(newtab);
       
       this.sandbox.start(tabcontent.find("#"+tabid));

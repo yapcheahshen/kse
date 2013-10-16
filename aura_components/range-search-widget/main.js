@@ -6,7 +6,7 @@ define(['backbone'], function(Backbone) {
       var yase=this.sandbox.yase;
       var that=this;
       yase.phraseSearch(opts,function(err,data) {
-        that.sandbox.emit('totalslot',data.count,data.hitcount);
+        that.sandbox.emit('totalslot'+this.group,data.count,data.hitcount);
       });
     },
     newsearch:function(tofind) {
@@ -38,8 +38,8 @@ define(['backbone'], function(Backbone) {
       if (!opts.tofind) return;
       var that=this;
       yase.phraseSearch(opts,function(err,data) {
-        if (opts.start==0) that.sandbox.emit('newresult',data);
-        else that.sandbox.emit('moreresult',data);
+        if (opts.start==0) that.sandbox.emit('newresult'+this.group,data);
+        else that.sandbox.emit('moreresult'+this.group,data);
       });
     },
     model:new Backbone.Model(),
@@ -47,13 +47,15 @@ define(['backbone'], function(Backbone) {
       this.model.set("pagebreak",opts.pagebreak);
       this.db=opts.db;
       this.newsearch(opts.tofind);
-
     },
     initialize: function() {
       this.db=this.options.db;
-      this.sandbox.on("more",this.dosearch,this);
-      this.sandbox.on("newsearch",this.newsearch,this) ;
-      this.sandbox.on("setrange",this.setrange,this);
+      this.groupid=this.$el.data('groupid');
+      this.group="";
+      if (this.groupid) this.group='.'+this.groupid;
+      this.sandbox.on("more"+this.group,this.dosearch,this);
+      this.sandbox.on("newsearch"+this.group,this.newsearch,this) ;
+      this.sandbox.on("setrange"+this.group,this.setrange,this);
       this.sandbox.once("init."+this.$el.data('viewid'),this.init,this);
     }
   };
