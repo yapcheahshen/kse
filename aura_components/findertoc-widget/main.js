@@ -13,7 +13,11 @@ define(['underscore','backbone',
       var toc=this.model.get("toc");
       var slot=parseInt(item.data('slot'));
       var toctree=this.sandbox.flattoc.goslot(slot);
-      item.siblings().removeClass('active');
+      var siblings=item.siblings();
+      if (this.itemstyle=='dropdown') {
+        siblings=item.parent().parent().find("li a");
+      }
+      siblings.removeClass('active');
       item.addClass('active');
 
       this.model.set("slot",slot);
@@ -38,7 +42,7 @@ define(['underscore','backbone',
     },
     buildtoc:function(tofind) {
       var that=this;
-      var opts={db:this.db, tofind:tofind, toc:this.config.toc, hidenohit:false}
+      var opts={db:this.db, tofind:tofind, toc:this.config.toc, hidenohit:this.hidenohit}
       this.sandbox.yase.buildToc(opts,function(err,toc){
         that.model.set("toc",toc);
         that.sandbox.flattoc.set(toc);
@@ -94,11 +98,12 @@ define(['underscore','backbone',
     },
     model:new Backbone.Model(),
     initialize: function() {
-      var itemstyle=this.options.itemStyle || "listgroup";
-      this.itemtemplate=eval(itemstyle+"template");
+      this.itemstyle=this.options.itemStyle || "listgroup";
+      this.hidenohit=JSON.parse(this.options.hidenohit || "false");
+      this.itemtemplate=eval(this.itemstyle+"template");
       this.config=JSON.parse(config);
       this.db=this.config.db; 
-      this.sandbox.on("tofind.change",this.buildtoc,this);
+      this.sandbox.on("toc.reset",this.buildtoc,this);
       this.model.on("change:toctree",this.render,this);
     }
   };
