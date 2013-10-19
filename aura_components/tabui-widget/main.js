@@ -28,8 +28,9 @@ define(['underscore','backbone',
       //var model=tabcontent.data('model');
       var model=this.tabs.get(tabid.substring(1));
       this.tabs.remove(model);
+      this.sandbox.emit("finalize."+'T'+model.cid);
       content.remove();
-      $('#tabs a:first').tab('show');
+      $('#tabs a:last').tab('show');
     },
     removetab:function(m)   {
       this.remove('T'+m.cid);
@@ -79,14 +80,15 @@ define(['underscore','backbone',
       tabcontent.append(newtab);
       
       var $newtab=tabcontent.find("#"+tabid);
-      this.sandbox.start($newtab);
       $newtab.height(tabcontentheight);
       if (m.get("focus")) this.$el.find("#tabs a[href=#"+tabid+"]").click();
 
-      //this is stupid, need a callback when widget is initialized
-      setTimeout(function(){
+      this.sandbox.once('initialized.'+tabid,function() {
         that.sandbox.emit("init."+tabid,m.get('extra'));
-      },200);
+      });
+
+      this.sandbox.start($newtab);
+
     },
     createtabs:function(str) {
       if (!str) return;

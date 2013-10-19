@@ -29,8 +29,10 @@ define(['backbone'], function(Backbone) {
       var rangestart=this.model.get("rangestart")||0;
       var rangeend=this.model.get("rangeend")||-1;
       var pagebreak=this.model.get("pagebreak");
+      var closesttag=[pagebreak,'p[n]'];
+      
       var opts={showtext:true,highlight:true,sourceinfo:true,
-          rangestart:rangestart,rangeend:rangeend, closesttag:pagebreak,
+          rangestart:rangestart,rangeend:rangeend, closesttag:closesttag,
           start:start||0, maxcount:20, db:this.db};
       var yase=this.sandbox.yase;
       opts.tofind=this.model.get("tofind");
@@ -38,7 +40,7 @@ define(['backbone'], function(Backbone) {
       if (!opts.tofind) return;
       var that=this;
       yase.phraseSearch(opts,function(err,data) {
-        if (opts.start==0) that.sandbox.emit('newresult'+that.group,data);
+        if (opts.start==0) that.sandbox.emit('newresult'+that.group,data,that.db,opts.tofind);
         else that.sandbox.emit('moreresult'+that.group,data);
       });
     },
@@ -48,6 +50,12 @@ define(['backbone'], function(Backbone) {
       this.db=opts.db;
       this.newsearch(opts.tofind);
     },
+    finalize:function() {
+      this.sandbox.off("more"+this.group,this.dosearch);
+      this.sandbox.off("newsearch"+this.group,this.newsearch) ;
+      this.sandbox.off("setrange"+this.group,this.setrange);
+      console.log('range search widget finalized');
+    },
     initialize: function() {
       this.db=this.options.db;
       this.groupid=this.$el.data('groupid');
@@ -56,7 +64,8 @@ define(['backbone'], function(Backbone) {
       this.sandbox.on("more"+this.group,this.dosearch,this);
       this.sandbox.on("newsearch"+this.group,this.newsearch,this) ;
       this.sandbox.on("setrange"+this.group,this.setrange,this);
-      this.sandbox.once("init."+this.$el.data('viewid'),this.init,this);
+      this.sandbox.once("init"+this.group,this.init,this);
+      this.sandbox.once("finalize"+this.group,this.finalize,this);
     }
   };
 });

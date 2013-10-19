@@ -12,7 +12,7 @@ define(['underscore','backbone',
       if (e.target.tagName!='A') item=item.parent();
       var toc=this.model.get("toc");
       var slot=parseInt(item.data('slot'));
-      var toctree=this.sandbox.flattoc.goslot(slot);
+      var toctree=this.flattoc.goslot(slot);
       var siblings=item.siblings();
       if (this.itemstyle=='dropdown') {
         siblings=item.parent().parent().find("li a");
@@ -44,9 +44,9 @@ define(['underscore','backbone',
       var that=this;
       var opts={db:this.db, tofind:tofind, toc:this.toc, hidenohit:this.hidenohit}
       this.sandbox.yase.buildToc(opts,function(err,toc){
-        that.model.set("toc",toc);
-        that.sandbox.flattoc.set(toc);
-        var toctree=that.sandbox.flattoc.go(0);
+        that.flattoc=new that.sandbox.flattoc();
+        that.flattoc.set(toc);
+        var toctree=that.flattoc.go(0);
         that.model.set({"toc":toc, "toctree":that.filltoc(toc,toctree)});
         //that.render(0);
       })
@@ -113,7 +113,7 @@ define(['underscore','backbone',
       this.groupid=this.options.groupid;
       this.group="";
       if (this.groupid) this.group="."+this.groupid;
-      this.sandbox.once("buildtoc"+this.group,this.init,this);
+      this.sandbox.once("init"+this.group,this.init,this);
       this.model.on("change:toctree",this.render,this);
     }
   };

@@ -1,20 +1,23 @@
-define(['underscore','backbone','text!./results.tmpl','text!./item.tmpl'], 
+define(['underscore','backbone',
+  'text!./results.tmpl','text!./item.tmpl'], 
  function(_,Backbone,template,itemtemplate) {
   return {
    events:{
     "mousemove .resultitem":"resultitemhover",
-    "click #opentext":"opentext"
+    "click .opentext":"opentext"
    },
    opentext:function() {
      var $listmenu=this.$el.find("#listmenu");
      var slot=$listmenu.data('slot');
-     //convert slot to id
-     var texts=[{db:'vrimul',start:slot}];
-     this.sandbox.emit("newreader",texts, slot , this.scrollto);
+     var tofind=this.$el.find(".results").data('tofind');
+     var opts={db:this.db,slot:slot,tofind:tofind}
+     this.sandbox.emit("gotosource",opts);
    },
    resultitemhover:function(e) {
     $e=$(e.target);
-    if (!$e.hasClass('resultitem')) $e=$e.parent();
+    while ($e.length && !$e.hasClass('resultitem')) {
+      $e=$e.parent();
+    }
     var top=$e.offset().top;
     var $listmenu=this.$el.find("#listmenu");
     $listmenu.offset({top:top})
@@ -58,12 +61,13 @@ define(['underscore','backbone','text!./results.tmpl','text!./item.tmpl'],
       }
       this.displayed=i+1;
     },
-    render: function (data) {
+    render: function (data,db,tofind) {
       if (!data) return;
       this.results=[];
+      this.db=db;
       this.displayed=0;
       this.results=data;
-      this.html(template);
+      this.html(_.template(template,{tofind:tofind}));
       this.resize();
       this.loadscreenful();
     },
@@ -75,7 +79,13 @@ define(['underscore','backbone','text!./results.tmpl','text!./item.tmpl'],
         that.$el.find("#totalhits").html(hitcount);
       },500)
     },
-
+    finalize:function() {
+     this.sandbox.off("newresult"+this.group,this.render);
+     this.sandbox.off("moreresult"+this.group,this.moreresult);
+     this.sandbox.off("totalslot"+this.group,this.totalslot);
+     this.sandbox.off("resize"+this.group,this.resize);
+     console.log("resultlist finalized")
+    },
     initialize: function() {
      this.groupid=this.options.groupid;
      this.group="";
@@ -84,6 +94,7 @@ define(['underscore','backbone','text!./results.tmpl','text!./item.tmpl'],
      this.sandbox.on("moreresult"+this.group,this.moreresult,this);
      this.sandbox.on("totalslot"+this.group,this.totalslot,this);
      this.sandbox.on("resize"+this.group,this.resize,this);
+     this.sandbox.once("finalize"+this.group,this.finalize,this);
     }
   }
 });

@@ -12,7 +12,8 @@ define(['underscore','backbone','text!./template.tmpl','text!./linkable.tmpl','t
         $d=$($dbs[i]);
         texts.push({db:$d.data('db'),start:$d.data('start')});
       }
-      this.sandbox.emit("newreader",texts, this.start, this.scrollto);
+      var opts={texts:texts,start:this.start,scrollto:scrollto}
+      this.sandbox.emit("newreader",opts);
     },
     selected:function(opts) {
       var that=this;

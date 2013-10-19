@@ -1,3 +1,7 @@
 <div  class="resultitem">
-	<%if (typeof sourceinfo!='undefined'){%><%=seq+1%>)<%=sourceinfo.filename%>::<%=sourceinfo.line%> , pb=<%=closest.value%><br/><%}%><span data-slot="<%=slot%>"><%=text%></span><hr/>
+	<%if (typeof sourceinfo!='undefined'){%><span class="label label-info"><%=seq+1%></span><span class="btn btn-link opentext">Open <%=closest[1].value%></span><div class="pull-right"><span class="label label-success">pb <%=closest[0].value%></span> <%=sourceinfo.filename%>:<%=sourceinfo.line%></div><%}%>
+<div class="row">
+	<div class="col-1"></div>
+	<div class="col-10" data-slot="<%=slot%>"><%=text%></div>
+</div>
 </div>
