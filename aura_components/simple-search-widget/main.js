@@ -56,8 +56,9 @@ define(['underscore','backbone','text!./template.tmpl',
           localStorage.setItem("tofind.kse",tofind);
           that.model.set('tofind',tofind);
           that.gethitcount(tofind);
+          that.listresult();
         },300);
-        this.listresult();
+        
     },
     showhitcount:function(count,db) {
       this.sandbox.emit('setdbhit',db,count);
