@@ -29,7 +29,7 @@ define(['backbone'], function(Backbone) {
       var rangestart=this.model.get("rangestart")||0;
       var rangeend=this.model.get("rangeend")||-1;
       var pagebreak=this.model.get("pagebreak");
-      var closesttag=[pagebreak,'p[n]'];
+      var closesttag=[pagebreak,'readunit[id]','p[n]'];
       
       var opts={showtext:true,highlight:true,sourceinfo:true,
           rangestart:rangestart,rangeend:rangeend, closesttag:closesttag,

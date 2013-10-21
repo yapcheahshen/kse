@@ -19,13 +19,10 @@ define(['underscore','backbone','text!./template.tmpl',
       this.model.set('dbs',dbs);
     },
     gotosource:function(opts) {
-      //unlimitted scroll
-      //show -5 lines
-      /*
-      var texts=[{db:opts.db,start:readunitprefix+'='+start+']'}];
-      var opts3={texts:texts,scrollto:scrollto,name:start,tofind:opts.tofind}
-      that.sandbox.emit("newtab",opts3);
-      */
+      var extra={db:opts.db,start:opts.slot,scrollto:"",tofind:opts.tofind}
+      var tofind=this.model.get('tofind');
+      var opts={widget:"text-widget",name:tofind,extra:extra,focus:true};
+      this.sandbox.emit("newtab",opts);
     },         
     listresult:function(start) {
       var that=this;

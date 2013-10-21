@@ -11,13 +11,11 @@ define(['underscore','backbone','text!./text.tmpl','text!../config.json'],
             opacity: 1,
           }, 1000 );
     },
-    render:function() {
+    fetchbytag:function() {
       var that=this;
-      var yase=this.sandbox.yase;
-      this.html(_.template(template,{text:"loading text..."}) );
-      yase.getTextByTag({db:this.db, 
+      this.sandbox.yase.getTextByTag({db:this.db, 
         selector:this.start,tofind:this.tofind,
-         maxslot:5000,},
+         maxslot:5000},
         function(err,data){
           that.html(_.template(template,data) );
           if (!that.scrollto) return;
@@ -29,7 +27,20 @@ define(['underscore','backbone','text!./text.tmpl','text!../config.json'],
                that.blink($(that.scrollto));  
             });            
           },500);
-      })
+      })      
+    },
+    fetchbyslot:function() {
+      var that=this;
+      this.sandbox.yase.getTextRange({db:this.db,
+        start:this.start,end:this.start+500,tofind:this.tofind
+      },function(err,data){
+        that.html(_.template(template,{text:data}));
+      });
+    },
+    render:function() {
+      this.html(_.template(template,{text:"loading text..."}) );
+      if (typeof this.start=='number') this.fetchbyslot();
+      else this.fetchbytag();
     },
 
     model:new Backbone.Model(),
@@ -41,8 +52,8 @@ define(['underscore','backbone','text!./text.tmpl','text!../config.json'],
       this.render();
     },
     initialize: function() {
-      this.viewid=this.options.id;
-      this.sandbox.once('load.'+this.viewid,this.load,this);
+      this.viewid=this.options.viewid;
+      this.sandbox.once('init.'+this.viewid,this.load,this);
       this.sandbox.emit("initialized."+this.viewid,this.viewid);
     }
   };

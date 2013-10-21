@@ -1,13 +1,21 @@
 <div  class="resultitem">
-	<%if (typeof sourceinfo!='undefined'){%><span class="label label-info"><%=seq+1%></span>
-	<%=sourceinfo.filename%>:<%=sourceinfo.line%><%}%>
+	<span class="label label-info"><%=seq+1%></span>
 
 	<%if (typeof closest!='undefined'){%>
-	<span class="btn btn-link opentext"  data-slot="<%=slot%>">Open <%=closest[1].value%></span><div class="pull-right"><span class="label label-success">pb <%=closest[0].value%></span> 
-	<%}else{%>
-		<span class="btn btn-link opentext" data-slot="<%=slot%>">Open</span>
-	<%}%>
+	<span class="btn btn-link opentext"  data-slot="<%=slot%>">Open <%=closest[2].value%>.<%=closest[1].value%></span><div class="pull-right"><span class="label label-success">pb <%=closest[0].value%></span> 
+		<%if (typeof sourceinfo!='undefined'){%>
+	<%=sourceinfo.filename%>:<%=sourceinfo.line%><%}%>
+		</div>
 
+	<%}else{%>
+		<span class="btn btn-link opentext" data-slot="<%=slot%>">
+		<%if (typeof sourceinfo!='undefined'){%>
+		<%=sourceinfo.filename%>:<%=sourceinfo.line%>
+		<%}else{%>
+		Open
+		<%}%>
+		</span>
+	<%}%>
 <div class="row">
 	<div class="col-1"></div>
 	<div class="col-10" data-slot="<%=slot%>"><%=text%></div>
