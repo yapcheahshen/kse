@@ -52,7 +52,7 @@ define(['underscore','backbone','text!./text.tmpl','text!../config.json'],
       this.render();
     },
     initialize: function() {
-      this.viewid=this.options.viewid;
+      this.viewid=this.options.id;
       this.sandbox.once('init.'+this.viewid,this.load,this);
       this.sandbox.emit("initialized."+this.viewid,this.viewid);
     }

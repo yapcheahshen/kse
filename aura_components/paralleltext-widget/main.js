@@ -32,7 +32,7 @@ define(['underscore','backbone','text!./text.tmpl'],
       var m=this.model.attributes;
       m.db=m.cols[seq].db;
       m.start=m.cols[seq].start;
-      this.sandbox.emit('load.'+id, m);
+      this.sandbox.emit('init.'+id, m);
     },
     render:function() {
       var coltexts=this.coltexts.toJSON();
@@ -89,7 +89,7 @@ define(['underscore','backbone','text!./text.tmpl'],
       this.model=new Backbone.Model();
       this.controllerheight=20;
       //this.textwidget=this.config.defaulttextwidget;
-      this.viewid=this.$el.data('viewid');
+      this.viewid=this.options.id;
       this.sandbox.once("init."+this.viewid,this.init,this);
       this.sandbox.on("resize",this.resize,this);
       this.sandbox.emit('initialized.'+this.viewid);

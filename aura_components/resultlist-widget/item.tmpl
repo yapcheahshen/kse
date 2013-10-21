@@ -2,7 +2,7 @@
 	<span class="label label-info"><%=seq+1%></span>
 
 	<%if (typeof closest!='undefined'){%>
-	<span class="btn btn-link opentext"  data-slot="<%=slot%>">Open <%=closest[2].value%>.<%=closest[1].value%></span><div class="pull-right"><span class="label label-success">pb <%=closest[0].value%></span> 
+	<span class="btn btn-link opentext"  data-slot="<%=slot%>">Open <%=closest[1].value%>.<%=closest[2].value%></span><div class="pull-right"><span class="label label-success">pb <%=closest[0].value%></span> 
 		<%if (typeof sourceinfo!='undefined'){%>
 	<%=sourceinfo.filename%>:<%=sourceinfo.line%><%}%>
 		</div>

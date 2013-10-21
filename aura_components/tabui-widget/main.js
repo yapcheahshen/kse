@@ -76,7 +76,7 @@ define(['underscore','backbone',
       this.$el.find("#tabs").append( _.template(tabtemplate,opts));
       var tabcontentheight=this.$el.parent().height()-this.$el.find("#tabs").height()-5;
       var tabcontent=this.$el.find(".tab-content");
-      var newtab='<div id="'+tabid+'" class="tab-pane"><div data-viewid="'+tabid+'"data-aura-widget="'+widget+'"></div></div>';
+      var newtab='<div id="'+tabid+'" class="tab-pane"><div data-id="'+tabid+'"data-aura-widget="'+widget+'"></div></div>';
       tabcontent.append(newtab);
       
       var $newtab=tabcontent.find("#"+tabid);
