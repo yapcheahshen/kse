@@ -1,0 +1,6 @@
+<% for (var i in dbs) { %>
+  <label><input data-db="<%=i%>" name="selectdb" type="radio"><%=dbs[i].name%>
+	<span class="label <%=dbs[i].extraclass%>"><%=dbs[i].hit%></span>
+  </label>
+  &nbsp;
+<%}%>

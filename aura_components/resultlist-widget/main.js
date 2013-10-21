@@ -6,9 +6,8 @@ define(['underscore','backbone',
     "mousemove .resultitem":"resultitemhover",
     "click .opentext":"opentext"
    },
-   opentext:function() {
-     var $listmenu=this.$el.find("#listmenu");
-     var slot=$listmenu.data('slot');
+   opentext:function(e) {
+     var slot=$(e.target).data('slot');
      var tofind=this.$el.find(".results").data('tofind');
      var opts={db:this.db,slot:slot,tofind:tofind}
      this.sandbox.emit("gotosource",opts);
@@ -28,9 +27,9 @@ define(['underscore','backbone',
     resize:function() {
       var that=this;
       var space=parseInt(this.options.space)||0;
-      var parentheight=this.$el.parent().height();
-      if (!parentheight) parentheight=this.$el.parent().parent().height();
-      this.$el.css("height", (parentheight) +"px");
+      //var height=this.$el.parent().parent().height()-this.$el.offset().top+40;
+      var height=$(window).height()-this.$el.offset().top;
+      this.$el.css("height", (height) +"px");
       this.$el.unbind('scroll');
       this.$el.bind("scroll", function() {
         if (that.$el.scrollTop()+ that.$el.innerHeight()+3> that.$el[0].scrollHeight) {
@@ -71,7 +70,7 @@ define(['underscore','backbone',
       this.resize();
       this.loadscreenful();
     },
-    totalslot:function(count,hitcount) {
+    settotalslot:function(count,hitcount) {
       var that=this;//totalslot might come later
       setTimeout(function(){
         that.totalslot=count;
@@ -82,8 +81,8 @@ define(['underscore','backbone',
     finalize:function() {
      this.sandbox.off("newresult"+this.group,this.render);
      this.sandbox.off("moreresult"+this.group,this.moreresult);
-     this.sandbox.off("totalslot"+this.group,this.totalslot);
-     this.sandbox.off("resize"+this.group,this.resize);
+     this.sandbox.off("totalslot"+this.group,this.settotalslot);
+     this.sandbox.off("resize",this.resize);
      console.log("resultlist finalized")
     },
     initialize: function() {
@@ -92,8 +91,8 @@ define(['underscore','backbone',
      if (this.options.groupid) this.group="."+this.options.groupid;
      this.sandbox.on("newresult"+this.group,this.render,this);
      this.sandbox.on("moreresult"+this.group,this.moreresult,this);
-     this.sandbox.on("totalslot"+this.group,this.totalslot,this);
-     this.sandbox.on("resize"+this.group,this.resize,this);
+     this.sandbox.on("totalslot"+this.group,this.settotalslot,this);
+     this.sandbox.on("resize",this.resize,this);
      this.sandbox.once("finalize"+this.group,this.finalize,this);
     }
   }

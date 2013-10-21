@@ -1,6 +1,8 @@
 {
-	"db":"vrimul",
-	"toc":["nikaya","book","readunit[id]"],
-	"tabui":[{"name":"tofind","widget":"tofind-widget","keep":true},
-	{"name":"tofind2","widget":"tofind-widget"}]
+	"db":"sample",
+	"website":"http://ksanaforge.github.io",
+	"searchtab":[
+		{"widget":"simple-search-widget","name":"Simple Search"}
+		,{"widget":"about-widget","name":"About"}
+	]
 }

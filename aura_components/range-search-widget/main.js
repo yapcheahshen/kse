@@ -45,27 +45,30 @@ define(['backbone'], function(Backbone) {
       });
     },
     model:new Backbone.Model(),
-    init:function(opts) {
-      this.model.set("pagebreak",opts.pagebreak);
-      this.db=opts.db;
-      this.newsearch(opts.tofind);
-    },
     finalize:function() {
       this.sandbox.off("more"+this.group,this.dosearch);
       this.sandbox.off("newsearch"+this.group,this.newsearch) ;
       this.sandbox.off("setrange"+this.group,this.setrange);
       console.log('range search widget finalized');
     },
+    load:function(id,opts) {
+      if (id!=this.id) return;
+      this.model.set("pagebreak",opts.pagebreak);
+      this.db=opts.db;
+      this.newsearch(opts.tofind);
+    },
     initialize: function() {
       this.db=this.options.db;
+      this.id='rs'+Math.round(Math.random()*10000);
       this.groupid=this.$el.data('groupid');
       this.group="";
       if (this.groupid) this.group='.'+this.groupid;
       this.sandbox.on("more"+this.group,this.dosearch,this);
       this.sandbox.on("newsearch"+this.group,this.newsearch,this) ;
       this.sandbox.on("setrange"+this.group,this.setrange,this);
-      this.sandbox.once("init"+this.group,this.init,this);
+      this.sandbox.once("init"+this.group,this.load,this);
       this.sandbox.once("finalize"+this.group,this.finalize,this);
+      this.sandbox.emit("initialized"+this.group,this.id);
     }
   };
 });

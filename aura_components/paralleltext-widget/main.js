@@ -1,7 +1,31 @@
+/*
+  TODO
+  check dictionary
+  a global rangy timer will check for selection
+*/
 define(['underscore','backbone','text!./text.tmpl'], 
   function(_,Backbone,template) {
   return {
     type: 'Backbone',
+    events:{
+          "mousemove p[n]":"paragraphhover",
+          "click #btnsync":"syncparallel"
+    },
+    syncparallel:function(e) {
+      console.log('sync')
+    },
+    paragraphhover:function(e) {
+      $e=$(e.target);
+      while ($e.length && !$e.is('p')) {
+        $e=$e.parent();
+      }
+      var top=$e.offset().top;
+      var left=$e.offset().left;
+      var $listmenu=this.$el.find("#parallelmenu");
+      $listmenu.offset({top:top,left:left})
+      //var slot=$e.find("[data-slot]").data("slot");
+      //$listmenu.data("slot",slot);
+    },
     loadtext:function(id) {
       var seq=parseInt(id.substring(id.lastIndexOf('-')+1),10);
       console.log('loadtext',seq);
