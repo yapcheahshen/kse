@@ -82,8 +82,7 @@ define(['underscore','backbone','text!./text.tmpl'],
     },
     finalize:function() {
       this.sandbox.off("resize",this.resize);
-      var viewid=this.$el.data('viewid');
-      this.sandbox.off("init."+viewid,this.init);
+      this.sandbox.off("init."+this.viewid,this.init);
     },
     initialize: function() {
       this.model=new Backbone.Model();
