@@ -2,6 +2,7 @@
 	"files":[
 		"kse/aura_components",
 		"kse/css",
+		"kse/config.json",
 		"kse/index.js",
 		"kse/index.html",
 		"kse/package.json",

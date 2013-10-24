@@ -28,6 +28,8 @@ define(['underscore','backbone',
       var that=this;
       var space=parseInt(this.options.space)||0;
       //var height=this.$el.parent().parent().height()-this.$el.offset().top+40;
+      //var height=$(window).height()-this.$el.offset().top;
+      $(".mainview").scrollTop(0); // need this to prevent vertical scroll from the beginning
       var height=$(window).height()-this.$el.offset().top;
       this.$el.css("height", (height) +"px");
       this.$el.unbind('scroll');
@@ -85,6 +87,7 @@ define(['underscore','backbone',
      this.sandbox.off("resize",this.resize);
      console.log("resultlist finalized")
     },
+
     initialize: function() {
      this.groupid=this.options.groupid;
      this.group="";

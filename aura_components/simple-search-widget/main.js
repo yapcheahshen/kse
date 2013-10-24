@@ -49,15 +49,17 @@ define(['underscore','backbone','text!./template.tmpl',
         var tofind=that.$("#tofind").val().trim();
         if (!tofind) {
           this.$el.find("#searchhelp").show();
+          this.$el.find("#searchresult").hide();
         } else {
           this.$el.find("#searchhelp").hide();
+          this.$el.find("#searchresult").show();
         }
         this.timer=setTimeout(function(){
           localStorage.setItem("tofind.kse",tofind);
           that.model.set('tofind',tofind);
           that.gethitcount(tofind);
           that.listresult();
-        },300);
+        },500);
         
     },
     showhitcount:function(count,db) {
