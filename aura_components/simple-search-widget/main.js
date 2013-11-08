@@ -67,11 +67,9 @@ define(['underscore','backbone','text!./template.tmpl',
     },
     gethitcount:function(tofind) {
       var that=this;
-      var opts={tofind:tofind,countonly:true};
       var dbs=this.model.get('dbs');
       for (var i in dbs) {
-        opts.db=dbs[i].name;
-        this.sandbox.yase.phraseSearch(opts,
+        this.sandbox.yase.phraseSearch({tofind:tofind,countonly:true,db:dbs[i].name},
           (function(db) {
             return function(err,data){
              that.showhitcount(data.hitcount,db);
