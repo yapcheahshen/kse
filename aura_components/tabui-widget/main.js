@@ -24,7 +24,7 @@ define(['underscore','backbone',
         return;
       }
       tab.remove();
-      var content=this.$el.find(".tab-content #"+tabid);
+      var content=this.$el.find("#tabuicontent #"+tabid);
       //var model=tabcontent.data('model');
       var model=this.tabs.get(tabid.substring(1));
       this.tabs.remove(model);
@@ -49,7 +49,7 @@ define(['underscore','backbone',
       this.$el.css("height", newheight+"px");
       var tabcontentheight=newheight-this.$el.find("#tabs").height()-5;
 
-      var tabcontent=this.$el.find(".tab-content");
+      var tabcontent=this.$el.find("#tabuicontent");
       tabcontent.height(tabcontentheight);
       var children=tabcontent.children();
       for (var i=0;i<children.length;i++) {
@@ -75,7 +75,7 @@ define(['underscore','backbone',
 
       this.$el.find("#tabs").append( _.template(tabtemplate,opts));
       var tabcontentheight=this.$el.parent().height()-this.$el.find("#tabs").height()-5;
-      var tabcontent=this.$el.find(".tab-content");
+      var tabcontent=this.$el.find("#tabuicontent");
       var newtab='<div id="'+tabid+'" class="tab-pane"><div data-id="'+tabid+'"data-aura-widget="'+widget+'"></div></div>';
       tabcontent.append(newtab);
       
