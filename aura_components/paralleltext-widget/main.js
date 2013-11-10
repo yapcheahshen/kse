@@ -32,6 +32,7 @@ define(['underscore','backbone','text!./text.tmpl'],
       var m=this.model.attributes;
       m.db=m.cols[seq].db;
       m.start=m.cols[seq].start;
+      m.paralleltext=this.viewid;
       this.sandbox.emit('init.'+id, m);
     },
     render:function() {
@@ -80,6 +81,14 @@ define(['underscore','backbone','text!./text.tmpl'],
       this.model.set(opts);
       this.settext(opts.cols);
     },
+    syncpara:function(opts) {
+      for (var i in this.coltexts.models) {
+        var id=this.coltexts.models[i].get('id');
+        if (id!=opts.from) {
+          this.sandbox.emit("scrollto."+id, opts.scrollto, opts.offset);
+        }
+      }
+    },
     finalize:function() {
       this.sandbox.off("resize",this.resize);
       this.sandbox.off("init."+this.viewid,this.init);
@@ -92,6 +101,7 @@ define(['underscore','backbone','text!./text.tmpl'],
       this.sandbox.once("init."+this.viewid,this.init,this);
       this.sandbox.on("resize",this.resize,this);
       this.sandbox.emit('initialized.'+this.viewid);
+      this.sandbox.on("syncpara."+this.viewid,this.syncpara,this);
     }
   };
 });
