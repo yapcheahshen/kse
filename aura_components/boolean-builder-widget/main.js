@@ -24,12 +24,13 @@ define(['underscore','backbone','text!./template.tmpl',
     example:function() {
       this.render();
       $i=this.$el.find(".tofind");
-      $i.val("rupam");
-      this.$el.find("#newphrase").click();
-      $(':focus').val("vedanā");
+      $i.val("sankhara");
 
       this.$el.find("#newphrase").click();
       $(':focus').val("anicca");
+
+      $(':focus').parent().find("#orphrase").click();
+      $(':focus').val("anatta");
 
       this.querychange();
     },

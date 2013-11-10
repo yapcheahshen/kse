@@ -22,9 +22,9 @@ define(['underscore','backbone','text!./text.tmpl','text!../config.json'],
 
           setTimeout(function(){
             that.$el.animate({
-                scrollTop: $(that.scrollto).offset().top-100
+                scrollTop: that.$el.find(that.scrollto).offset().top-100
             },'slow',function(){
-               that.blink($(that.scrollto));  
+               that.blink(that.$el.find(that.scrollto));  
             });            
           },500);
       })      

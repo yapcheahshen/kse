@@ -36,8 +36,8 @@ define(['underscore','backbone',
       this.remove('T'+m.cid);
     },
     showtab:function(e) {
-      $(e.target).find('button').css('display','inline')
-      $(e.relatedTarget).find('button').css('display','none');
+      //$(e.target).find('button').css('display','inline')
+      //$(e.relatedTarget).find('button').css('display','none');
     },
     childresize:function() {
       this.sandbox.emit("resize");
@@ -97,12 +97,13 @@ define(['underscore','backbone',
         var w=tabs[i].split('|')
         var widget=w[0];
         var name=w[1].trim();
-        if (name.length>10) name=name.substring(0,10)+'...';
+        if (name.length>12) name=name.substring(0,12)+'...';
         this.tabs.add({widget:widget,name:name,keep:true});
       }
     },
     newtab:function(opts) {
       if (opts.tabsid && opts.tabsid!=this.$el.attr('id')) return;//no my business
+      if (opts.name.length>12) opts.name=opts.name.substring(0,12)+'...';
       this.tabs.add(opts);
     },
     inittab:function(setting) {
