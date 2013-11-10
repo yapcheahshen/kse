@@ -2,10 +2,12 @@ define(['backbone'], function(Backbone) {
   return {
     type: 'Backbone',
     totalslot:function(tofind) {
-      var opts={db:this.db,tofind:tofind,countonly:true};
+      var opts={db:this.db,tofind:tofind,countonly:true,
+        searchtype:this.model.get("searchtype"),
+        distance:this.model.get("distance")};
       var yase=this.sandbox.yase;
       var that=this;
-      yase.phraseSearch(opts,function(err,data) {
+      yase.search(opts,function(err,data) {
         that.sandbox.emit('totalslot'+that.group,data.count,data.hitcount);
       });
     },
@@ -30,17 +32,17 @@ define(['backbone'], function(Backbone) {
       var rangeend=this.model.get("rangeend")||-1;
       var pagebreak=this.model.get("pagebreak");
       var closesttag=[pagebreak,'readunit[id]','p[n]'];
-      
+      var distance=this.model.get("")
       var opts={showtext:true,highlight:true,sourceinfo:true,
           rangestart:rangestart,rangeend:rangeend, closesttag:closesttag,
-          start:start||0, maxcount:20, db:this.db};
+          tofind:this.model.get("tofind"),distance:this.model.get("distance"),
+          start:start||0, maxcount:20, db:this.db, searchtype:this.model.get("searchtype")};
       var yase=this.sandbox.yase;
-      opts.tofind=this.model.get("tofind");
-      this.model.set({tofind:opts.tofind});
       if (!opts.tofind) return;
       var that=this;
-      yase.phraseSearch(opts,function(err,data) {
-        if (opts.start==0) that.sandbox.emit('newresult'+that.group,data,that.db,opts.tofind);
+
+      yase.search(opts,function(err,data) {
+        if (opts.start==0) that.sandbox.emit('newresult'+that.group,data,that.db,opts.tofind,opts.searchtype);
         else that.sandbox.emit('moreresult'+that.group,data);
       });
     },
@@ -55,6 +57,7 @@ define(['backbone'], function(Backbone) {
       if (id!=this.id) return;
       this.model.set("pagebreak",opts.pagebreak);
       this.db=opts.db;
+      this.model.set({"distance":opts.distance, searchtype:opts.searchtype||"phraseSearch"});
       this.newsearch(opts.tofind);
     },
     initialize: function() {

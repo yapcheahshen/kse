@@ -40,9 +40,10 @@ define(['underscore','backbone',
         }
         return this.toctree;
     },
-    buildtoc:function(tofind) {
+    buildtoc:function(tofind,searchtype) {
       var that=this;
-      var opts={db:this.db, tofind:tofind, toc:this.tocsetting, hidenohit:this.hidenohit}
+      var opts={db:this.db, tofind:tofind, searchtype:searchtype,
+        toc:this.tocsetting, hidenohit:this.hidenohit}
       this.sandbox.yase.buildToc(opts,function(err,toc){
         that.flattoc=new that.sandbox.flattoc();
         that.flattoc.set(toc);
@@ -105,7 +106,7 @@ define(['underscore','backbone',
       this.db=opts.db;
       this.tocsetting=opts.toc;
       this.hidenohit=opts.hidenohit;
-      this.buildtoc(opts.tofind);
+      this.buildtoc(opts.tofind,opts.searchtype);
       this.itemstyle=opts.itemstyle||this.options.itemStyle ;
 
       this.itemstyle=this.itemstyle || "listgroup";

@@ -14,7 +14,7 @@ define(['underscore','backbone','text!./text.tmpl','text!../config.json'],
     fetchbytag:function() {
       var that=this;
       this.sandbox.yase.getTextByTag({db:this.db, 
-        selector:this.start,tofind:this.tofind,
+        selector:this.start,tofind:this.tofind,searchtype:this.searchtype,
          maxslot:5000},
         function(err,data){
           that.html(_.template(template,data) );
@@ -32,7 +32,7 @@ define(['underscore','backbone','text!./text.tmpl','text!../config.json'],
     fetchbyslot:function() {
       var that=this;
       this.sandbox.yase.getTextRange({db:this.db,
-        start:this.start,end:this.start+500,tofind:this.tofind
+        start:this.start,end:this.start+500,tofind:this.tofind,searchtype:searchtype,
       },function(err,data){
         that.html(_.template(template,{text:data}));
       });
@@ -47,6 +47,7 @@ define(['underscore','backbone','text!./text.tmpl','text!../config.json'],
     load:function(opts) {
       this.start=opts.start;
       this.tofind=opts.tofind;
+      this.searchtype=opts.searchtype;
       this.scrollto=opts.scrollto;
       this.db=opts.db;
       this.render();

@@ -9,7 +9,8 @@ define(['underscore','backbone',
    opentext:function(e) {
      var slot=$(e.target).data('slot');
      var tofind=this.$el.find(".results").data('tofind');
-     var opts={db:this.db,slot:slot,tofind:tofind}
+     var searchtype=this.$el.find(".results").data('searchtype');
+     var opts={db:this.db,slot:slot,tofind:tofind,searchtype:searchtype}
      this.sandbox.emit("gotosource",opts);
    },
    resultitemhover:function(e) {
@@ -62,13 +63,14 @@ define(['underscore','backbone',
       }
       this.displayed=i+1;
     },
-    render: function (data,db,tofind) {
+    render: function (data,db,tofind,searchtype) {
       if (!data) return;
       this.results=[];
       this.db=db;
       this.displayed=0;
       this.results=data;
-      this.html(_.template(template,{tofind:tofind}));
+      if (typeof tofind!='string') tofind=JSON.stringify(tofind);
+      this.html(_.template(template,{tofind:tofind,searchtype:searchtype}));
       this.resize();
       this.loadscreenful();
     },

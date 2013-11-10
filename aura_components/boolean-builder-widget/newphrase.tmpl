@@ -1,0 +1,24 @@
+<div>
+		<div class="btn-group dropup">
+		  <button type="button" class="form-control btn btn-primary dropdown-toggle" data-toggle="dropdown" data-mode="followby">
+		    Followed by
+		  </button>
+
+
+		  <ul class="dropdown-menu" role="menu">
+		    <li><a id="searchmode" data-mode="followby">Followed by</a></li>
+		    <li><a id="searchmode" data-mode="notfollowby">Not Followed by</a></li>
+		    <!--
+		    <li><a id="searchmode" data-mode="nearby">Nearby</a></li>
+		    <li><a id="searchmode" data-mode="notnearby">Not Nearby</a></li>
+		    //-->
+		  </ul>
+		</div>
+
+		<div class="input-group input-group-lg">
+			 <span id="removephrase" title="remove group" class="btn btn-danger input-group-addon">-</span>
+
+			<input class="tofind form-control" style="font-size:150%" type="text" value="" placeholder="" data-mode="and"></input> 		
+			 <span id="orphrase" title="Or phrase" class="btn btn-warning input-group-addon">or</span>
+		</div>
+</div>
