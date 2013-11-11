@@ -2,7 +2,7 @@
 	"db":"sample",
 	"website":"http://ksanaforge.github.io",
 	"searchtab":[
-		{"widget":"simple-search-widget","name":"Simple Search"}
+		{"widget":"boolean-search-widget","name":"Boolean Search"}
 		,{"widget":"about-widget","name":"About"}
 	]
 }

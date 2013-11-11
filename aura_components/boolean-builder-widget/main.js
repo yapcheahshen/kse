@@ -14,24 +14,31 @@ define(['underscore','backbone','text!./template.tmpl',
       "click #orphrase":"orphrase",
       "click #removeorphrase":"removeorphrase",
       "input .tofind":"querychange",
-      "click #btnexample":"example",
       "click .slotdistance":"distancechange"
     },
     distancechange:function(e) {
       var distance=$(e.target).data('distance');
       this.model.set("distance",distance);
     },
-    example:function() {
+    setsample:function(q) {
       this.render();
-      $i=this.$el.find(".tofind");
-      $i.val("sankhara");
-
-      this.$el.find("#newphrase").click();
-      $(':focus').val("anicca");
-
-      $(':focus').parent().find("#orphrase").click();
-      $(':focus').val("anatta");
-
+      this.$el.find(".tofind").focus();  //reset
+      Action={'@':'followby','@!':'notfollowby',
+      '~':'nearby','~!':'notnearby','|':'or'};
+      var arr=q.split(',');
+      for (var i in arr) {
+        var action=Action[arr[i]];
+        if (action) {
+          if (action=='or') $(':focus').parent().find("#orphrase").click();
+          else {
+            this.$el.find("#newphrase").click();
+            $btn=$(':focus').parent().prev().find("button");
+            this.setsearchmode(action,$btn);
+          }
+        } else {
+          $(':focus').val(arr[i]);
+        }
+      }
       this.querychange();
     },
     removeorphrase:function(e) {
@@ -47,14 +54,17 @@ define(['underscore','backbone','text!./template.tmpl',
       } 
       $e.parent().parent().find("input").last().focus();
     },
-    searchmode:function(e) {
-      $e=$(e.target);
-      var mode=$e.data('mode');
-      var text=$e.html();
-      var $btn=$e.parent().parent().parent().find("button");
+    setsearchmode:function(mode,$btn) {
+      var text=$btn.next().find("a[data-mode='"+mode+"']").html();
       $btn.html(text);
       $btn.data('mode',mode);
       this.querychange();
+    },
+    searchmode:function(e) {
+      $e=$(e.target);
+      var mode=$e.data('mode');
+      var $btn=$e.parent().parent().parent().find("button");
+      this.setsearchmode(mode,$btn);
     },
     removephrase:function(e) {
       $e=$(e.target);
@@ -112,6 +122,7 @@ define(['underscore','backbone','text!./template.tmpl',
       var dis=this.$el.find("input.slotdistance[checked]").data('distance');
       this.model.set("distance",dis);
       this.model.on("change:distance",this.querychange,this);
+      this.sandbox.on("boolsearch.setexample",this.setsample,this)
 
     }
   };

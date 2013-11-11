@@ -17,6 +17,7 @@ define(['underscore','text!./template.tmpl','backbone'],
       });
     }, 
     setdbhit:function(db,hit) {
+      hit=hit||0;
       var dbs=this.model.get("dbs");
       dbs[db].hit=hit;
       var hitspan=this.$el.find("input[data-db='"+db+"']").next();

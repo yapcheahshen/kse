@@ -1,4 +1,10 @@
-hl {color:red;background:yellow;}
+hl {background:yellow;}
+hl[n="1"] {background:LightPink;}
+hl[n="2"] {background:lightblue;}
+hl[n="3"] {background:lightgreen;}
+hl[n="4"] {background:Violet ;}
+hl[n="5"] {background:Plum  ;}
+
 .resultitem {font-size:150%;}
 
 span.selectedtoc {

@@ -10,7 +10,9 @@ define(['underscore','backbone',
      var slot=$(e.target).data('slot');
      var tofind=this.$el.find(".results").data('tofind');
      var searchtype=this.$el.find(".results").data('searchtype');
-     var opts={db:this.db,slot:slot,tofind:tofind,searchtype:searchtype}
+     var distance=this.$el.find(".results").data('distance');
+     var opts={db:this.db,slot:slot,tofind:tofind,
+      searchtype:searchtype,distance:distance}
      this.sandbox.emit("gotosource",opts);
    },
    resultitemhover:function(e) {
@@ -52,6 +54,7 @@ define(['underscore','backbone',
       var next=i+1;
       var out={count:0,result:res[i]};
       if (next>=res.length) return out;
+      if (!res[i].closest) return out; //cannot group
       var p1=res[i].closest[1].value+'.'+res[i].closest[2].value;
       var slot=res[i].slot;
       do {
@@ -85,14 +88,15 @@ define(['underscore','backbone',
       }
       this.displayed=i+1;
     },
-    render: function (data,db,tofind,searchtype) {
+    render: function (data,db,tofind,searchtype,distance) {
       if (!data) return;
       this.results=[];
       this.db=db;
       this.displayed=0;
       this.results=data;
       if (typeof tofind!='string') tofind=JSON.stringify(tofind);
-      this.html(_.template(template,{tofind:tofind,searchtype:searchtype}));
+      this.html(_.template(template,{tofind:tofind,
+        searchtype:searchtype,distance:distance}));
       this.resize();
       this.loadscreenful();
     },
