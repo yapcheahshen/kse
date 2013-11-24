@@ -1,7 +1,7 @@
 define(['underscore','backbone','text!./text.tmpl','text!../config.json'], 
   function(_,Backbone,template,config) {
   return {
-    type: 'Backbone',
+   // type: 'Backbone',
     newreader:function(opts) {
       //texts,name,scrollto
       var opts2={widget:"paralleltext-widget@kse",

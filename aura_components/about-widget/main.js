@@ -1,7 +1,7 @@
 define(['underscore','backbone','text!./template.tmpl','text!../config.json'], 
   function(_,Backbone,template,config) {
   return {
-    type: 'Backbone',
+    //type: 'Backbone',
     events: {
       "click #website":"gowebsite"
     },

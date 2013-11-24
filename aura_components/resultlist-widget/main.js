@@ -26,7 +26,7 @@ define(['underscore','backbone',
     var slot=$e.find("[data-slot]").data("slot");
     $listmenu.data("slot",slot);
    },
-   type:"Backbone",
+  // type:"Backbone",
     resize:function() {
       var that=this;
       var space=parseInt(this.options.space)||0;
@@ -38,8 +38,8 @@ define(['underscore','backbone',
       this.$el.unbind('scroll');
       this.$el.bind("scroll", function() {
         if (that.$el.scrollTop()+ that.$el.innerHeight()+3> that.$el[0].scrollHeight) {
-          if (that.displayed+10>that.results.length && that.displayed<that.totalslot) {
-            that.sandbox.emit("more"+that.group,that.results.length);
+          if (that.displayed+10>that.fetched && that.displayed<that.totalslot) {
+            that.sandbox.emit("more"+that.group,that.fetched);
           } else {
             that.loadscreenful();  
           }
@@ -47,7 +47,9 @@ define(['underscore','backbone',
       });
     },
     moreresult:function(data) {
-      this.results=this.results.concat(data);
+      this.results=data;
+      this.fetched+=data.docs.length;
+      //this.results.docs=this.results.docs.concat(data.docs);
       this.loadscreenful();
     },
     samegroup:function(res,i) {
@@ -73,10 +75,19 @@ define(['underscore','backbone',
       var screenheight=this.$el.innerHeight();
       var $listgroup=$(".results");
       var startheight=$listgroup.height();
-      if (this.displayed>=this.results.length) return;
+      if (this.displayed>=this.results.doccount) return;
       var now=this.displayed||0;
-      var H=0, i=now;
-      while (i<this.results.length) {
+      var H=0, texts=this.results.texts, sourceinfos=this.results.sourceinfo;
+      var showscore=!!this.results.opts.rank;
+      this.results.docs.some(function(D,i){
+
+        var o={showscore:showscore,seq:now+i,slot:D[1],score:D[0],text:texts[D[1]],sourceinfo:sourceinfos[i]};
+        var newitem=_.template(itemtemplate,o);
+        $listgroup.append(newitem); // this is slow  to get newitem height()
+        return ($listgroup.height()-startheight>screenheight) ;
+      })
+      /*
+      while (i<this.results.docs.length) {
         var grouped=this.samegroup(this.results,i);
         i+=grouped.count;
 
@@ -86,13 +97,15 @@ define(['underscore','backbone',
         if ($listgroup.height()-startheight>screenheight) break;
         i++
       }
-      this.displayed=i+1;
+      */
+      this.displayed+=this.results.docs.length;
     },
     render: function (data,db,tofind,searchtype,distance) {
       if (!data) return;
       this.results=[];
       this.db=db;
       this.displayed=0;
+      this.fetched=data.docs.length;
       this.results=data;
       if (typeof tofind!='string') tofind=JSON.stringify(tofind);
       this.html(_.template(template,{tofind:tofind,

@@ -3,7 +3,7 @@ define(['underscore','backbone',
   ], 
   function(_,backbone,template,tabtemplate) {
   return {
-    type: 'Backbone',
+  //  type: 'Backbone',
     events:{
       'view':'viewevent',
       'show.bs.tab a[data-toggle="tab"]':"showtab",

@@ -1,0 +1,59 @@
+<div class="row">
+	<div class="col-md-1"></div>
+	<div class="col-md-10">
+	<div id="matchpanel" class="panel panel-success">
+	<div class="row panel-body text-center">
+		<div data-aura-widget="select-db-widget" data-type="radio"></div>
+	</div>
+	</div>
+	
+	<div class="col-md-1"></div>
+</div>
+
+</div>
+</div>
+
+<div class="row">
+	<div class="col-md-1"></div>
+	<div class="col-md-10">
+		<div class="input-group input-group-lg">
+			 <span class="input-group-addon">Search</span>
+			<input class="form-control" style="font-size:150%" id="query" type="text" value="<%=value%>" placeholder=""></input> 
+			 <span id="clearquery" title="Clear Query" class="btn btn-danger input-group-addon">×</span>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-1"></div>
+	<div class="col-md-10 input-group">
+<label class="btn btn-info btnversion input-group-addon">
+    <input type="radio" name="rank" checked=true data-order="">Natural Order
+  </label>
+  <label class="btn btn-info btnversion input-group-addon">
+    <input type="radio" name="rank" data-order="vsm">Rank by Score
+  </label>
+ 	</div>
+</div> 
+
+<div class="row" id="searchhelp">
+	<div class="col-md-1"></div>
+	<div class="col-md-10">
+		<pre>
+		Chinese: use space as phrase delimiter
+		English: "a phrase" word
+		Tibetan: use space or shad as phrase delimiter
+		+include "+include phrase" -exclude "-exclude phrase"
+		prefix%  : expand to prefix1 prefix2 prefix_anything (indoeuropen only)
+		, synonym operator
+		"hot,spicy food" match "hot food" and "spicy food"
+		wildcard in a phrase:
+		* match zero or any one token
+		? match any one token
+		20* match zero or up to 20 tokens
+		20? match 20 tokens
+		"a 2* dog"  match "a dog" , "a happy dog" and "a happy old dog"
+		"a 2? dog"  match "a happy old dog"
+		</pre>
+	 </div>
+</div>
+<div  id="searchresult" data-aura-widget="resultlist-widget" style="overflow-x:hidden"></div>

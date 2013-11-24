@@ -1,7 +1,7 @@
 define(['backbone','text!./template.tmpl','text!./itemtemplate.tmpl','text!../config.json'], 
 	function(Backbone,template,itemtemplate,config) {
   return {
-    type: 'Backbone',
+ //   type: 'Backbone',
 	render:function() {
 		this.html(template);
     	this.createtabs(this.config.searchtab);
