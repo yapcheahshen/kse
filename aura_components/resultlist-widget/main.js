@@ -48,7 +48,7 @@ define(['underscore','backbone',
     },
     moreresult:function(data) {
       this.results=data;
-      this.fetched+=data.docs.length;
+      this.fetched+=data.matched.length;
       //this.results.docs=this.results.docs.concat(data.docs);
       this.loadscreenful();
     },
@@ -79,7 +79,7 @@ define(['underscore','backbone',
       var now=this.displayed||0;
       var H=0, texts=this.results.texts, sourceinfos=this.results.sourceinfo;
       var showscore=!!this.results.opts.rank;
-      this.results.docs.some(function(D,i){
+      this.results.matched.some(function(D,i){
 
         var o={showscore:showscore,seq:now+i,slot:D[1],score:D[0],text:texts[D[1]],sourceinfo:sourceinfos[i]};
         var newitem=_.template(itemtemplate,o);
@@ -87,7 +87,7 @@ define(['underscore','backbone',
         return ($listgroup.height()-startheight>screenheight) ;
       })
       /*
-      while (i<this.results.docs.length) {
+      while (i<this.results.matched.length) {
         var grouped=this.samegroup(this.results,i);
         i+=grouped.count;
 
@@ -98,14 +98,14 @@ define(['underscore','backbone',
         i++
       }
       */
-      this.displayed+=this.results.docs.length;
+      this.displayed+=this.results.matched.length;
     },
     render: function (data,db,tofind,searchtype,distance) {
       if (!data) return;
       this.results=[];
       this.db=db;
       this.displayed=0;
-      this.fetched=data.docs.length;
+      this.fetched=data.matched.length;
       this.results=data;
       if (typeof tofind!='string') tofind=JSON.stringify(tofind);
       this.html(_.template(template,{tofind:tofind,

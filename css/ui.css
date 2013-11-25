@@ -27,5 +27,5 @@ margin-right:-30px;}
 	float:right;color:DarkOrange;font-weight:bold;font-family: Courier
 }
 
-pb:after { content: "["  attr(id) "]"; font-size:80%; color:blue;} 
+pb:after { content: "["  attr(n) "]"; font-size:80%; color:blue;} 
 .bodytext {font-size:150%;}

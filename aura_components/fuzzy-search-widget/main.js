@@ -47,12 +47,12 @@ define(['underscore','backbone','text!./template.tmpl',
       var rank=this.model.get('rank');
       if (!db || !query) return;
       
-      var opts={db:db,query:query,rank:rank,output:["docs","texts","sourceinfo"],
+      var opts={db:db,query:query,rank:rank,output:["match","texts","sourceinfo"],
         max:20,start:start||0};
         if (!this.$yase) {
           throw 'not $yase'
         } else {
-          this.$yase("search",opts).done(this.searchreply);    
+          this.$yase("search",opts).done(this.searchreply);
         }
       
     },
