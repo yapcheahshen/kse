@@ -30,6 +30,7 @@ define(['underscore','backbone','text!./template.tmpl',
       this.sandbox.emit("newtab",opts);
     },
     searchreply:function(res) {
+      if (!res) return;
         if (res.opts.start==0) {
           var db=res.opts.db;
           var dbs=this.model.get('dbs');
@@ -47,7 +48,8 @@ define(['underscore','backbone','text!./template.tmpl',
       var rank=this.model.get('rank');
       if (!db || !query) return;
       
-      var opts={db:db,query:query,rank:rank,output:["match","texts","sourceinfo"],
+      var opts={db:db,query:query,
+        abridged:'<slot expandable="true" n="$slot">...</slot>',rank:rank,output:["match","texts","sourceinfo"],
         max:20,start:start||0};
         if (!this.$yase) {
           throw 'not $yase'

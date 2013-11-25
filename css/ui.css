@@ -1,9 +1,15 @@
 hl {background:yellow;}
-hl[n="1"] {background:LightPink;}
+hl[n="1"] {background:YellowGreen;}
 hl[n="2"] {background:lightblue;}
 hl[n="3"] {background:lightgreen;}
-hl[n="4"] {background:Violet ;}
-hl[n="5"] {background:Plum  ;}
+hl[n="4"] {background:Violet;}
+hl[n="5"] {background:Plum;}
+hl[n="6"] {background:Coral;}
+hl[n="7"] {background:LawnGreen;}
+hl[n="8"] {background:LightSkyBlue;}
+hl[n="9"] {background:Orchid;}
+
+slot[expandable='true']:hover {text-decoration: underline;cursor:pointer;background: Tomato }
 
 .resultitem {font-size:150%;}
 
@@ -26,6 +32,6 @@ margin-right:-30px;}
 .hit {
 	float:right;color:DarkOrange;font-weight:bold;font-family: Courier
 }
-
+p[n]:before  { content: "("  attr(n) ")"; font-size:80%; color:green;} 
 pb:after { content: "["  attr(n) "]"; font-size:80%; color:blue;} 
 .bodytext {font-size:150%;}

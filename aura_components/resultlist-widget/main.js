@@ -4,7 +4,43 @@ define(['underscore','backbone',
   return {
    events:{
     "mousemove .resultitem":"resultitemhover",
-    "click .opentext":"opentext"
+    "click .opentext":"opentext",
+    "click slot":"openslot"
+   },
+   type:"Backbone",
+   getslots:function(n,newslot) {
+    var slots=[];
+    if (newslot>0) {
+      while (newslot) {slots.push(n++);newslot--}
+    } else if (newslot<0) {
+      while (newslot) {slots.unshift(n--);newslot++}
+    } else slots=[n];
+    console.log(slots)
+    return slots;
+   },
+   openslot:function(e) {
+    var e=$(e.target);
+    var newslot=parseInt(e.attr('newslot'));
+    var n=parseInt(e.attr('n'),10);
+    var slots=this.getslots(n,newslot)
+
+    var promise=this.$yase("getText",{db:this.db,slot:slots});
+    promise.done(function(data){
+      
+      if (newslot) {  
+        if (data[0]!='<') data="<div>"+data+"</div>";
+        $new=$(data);
+        $new.hide();
+        if (newslot<0) e.after($new);
+        else e.before($new);
+        $new.show("fast");
+        e.attr('n',n+newslot)
+      } else { //abridge , replace
+        e.hide().html(data).show("fast");   
+        e.attr("expandable",false);     
+      }
+      
+    })
    },
    opentext:function(e) {
      var slot=$(e.target).data('slot');
@@ -26,30 +62,23 @@ define(['underscore','backbone',
     var slot=$e.find("[data-slot]").data("slot");
     $listmenu.data("slot",slot);
    },
-  // type:"Backbone",
+   
     resize:function() {
       var that=this;
-      var space=parseInt(this.options.space)||0;
-      //var height=this.$el.parent().parent().height()-this.$el.offset().top+40;
-      //var height=$(window).height()-this.$el.offset().top;
       $(".mainview").scrollTop(0); // need this to prevent vertical scroll from the beginning
       var height=$(window).height()-this.$el.offset().top;
       this.$el.css("height", (height) +"px");
       this.$el.unbind('scroll');
       this.$el.bind("scroll", function() {
         if (that.$el.scrollTop()+ that.$el.innerHeight()+3> that.$el[0].scrollHeight) {
-          if (that.displayed+10>that.fetched && that.displayed<that.totalslot) {
-            that.sandbox.emit("more"+that.group,that.fetched);
-          } else {
-            that.loadscreenful();  
-          }
+          that.loadscreenful();
         }
       });
     },
     moreresult:function(data) {
       this.results=data;
       this.fetched+=data.matched.length;
-      //this.results.docs=this.results.docs.concat(data.docs);
+      this.remain=data.matched.length;
       this.loadscreenful();
     },
     samegroup:function(res,i) {
@@ -71,34 +100,49 @@ define(['underscore','backbone',
       } while (next<res.length);
       return out;
     },
+    getscoreclass:function(score) {
+      var scoreclass='label '
+        if (score>0.9) scoreclass+='label-success';
+        else if (score>0.8) scoreclass+='label-primary';
+        else if (score>0.7) scoreclass+='label-info';
+        else if (score>0.6) scoreclass+='label-warning';
+        else scoreclass+='label-danger';
+        return scoreclass;
+    },
+    //this is quite complicated..no refactor
     loadscreenful:function() {
       var screenheight=this.$el.innerHeight();
       var $listgroup=$(".results");
       var startheight=$listgroup.height();
       if (this.displayed>=this.results.doccount) return;
-      var now=this.displayed||0;
+      
       var H=0, texts=this.results.texts, sourceinfos=this.results.sourceinfo;
       var showscore=!!this.results.opts.rank;
-      this.results.matched.some(function(D,i){
-
-        var o={showscore:showscore,seq:now+i,slot:D[1],score:D[0],text:texts[D[1]],sourceinfo:sourceinfos[i]};
+      var that=this;
+      var i=this.results.matched.length-this.remain;
+      if (this.remain<=0) {
+        that.sandbox.emit("more"+that.group,that.fetched);
+        return true;
+      }
+      var startfrom=this.fetched-this.results.matched.length;
+      do { 
+        D=this.results.matched[i];
+        var score=D[0],scoreclass=this.getscoreclass(score);
+        var seq=i+startfrom;
+        var o={showscore:showscore,seq:seq,
+          slot:sourceinfos[i].slot,lastslot:sourceinfos[i].lastslot,
+          score:score,text:texts[D[1]],sourceinfo:sourceinfos[i],scoreclass:scoreclass};
         var newitem=_.template(itemtemplate,o);
         $listgroup.append(newitem); // this is slow  to get newitem height()
-        return ($listgroup.height()-startheight>screenheight) ;
-      })
-      /*
-      while (i<this.results.matched.length) {
-        var grouped=this.samegroup(this.results,i);
-        i+=grouped.count;
+        that.remain--;
+        that.displayed++;
+        i++;
+        if (that.remain<0) {
+          that.sandbox.emit("more"+that.group,that.fetched);
+          return true;
+        }        
+      } while ( $listgroup.height()<screenheight+startheight && that.remain);
 
-        newitem=_.template(itemtemplate,grouped.result);
-
-        $listgroup.append(newitem); // this is slow  to get newitem height()
-        if ($listgroup.height()-startheight>screenheight) break;
-        i++
-      }
-      */
-      this.displayed+=this.results.matched.length;
     },
     render: function (data,db,tofind,searchtype,distance) {
       if (!data) return;
@@ -107,6 +151,7 @@ define(['underscore','backbone',
       this.displayed=0;
       this.fetched=data.matched.length;
       this.results=data;
+      this.remain=data.matched.length;
       if (typeof tofind!='string') tofind=JSON.stringify(tofind);
       this.html(_.template(template,{tofind:tofind,
         searchtype:searchtype,distance:distance}));
@@ -132,6 +177,7 @@ define(['underscore','backbone',
     initialize: function() {
      this.groupid=this.options.groupid;
      this.group="";
+     this.$yase=this.sandbox.$yase.bind(this);
      if (this.options.groupid) this.group="."+this.options.groupid;
      this.sandbox.on("newresult"+this.group,this.render,this);
      this.sandbox.on("moreresult"+this.group,this.moreresult,this);

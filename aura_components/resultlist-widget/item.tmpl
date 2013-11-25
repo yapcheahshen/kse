@@ -17,7 +17,11 @@
 		</span>
 	<%}%>
 <div class="row">
-	<div class="col-md-1"><%if (showscore){%><%=(score*100).toFixed(0)+'%'%><%}%></div>
-	<div class="col-md-10" data-slot="<%=slot%>"><%=text%></div>
+	<div class="col-md-12" data-slot="<%=slot%>">
+		<slot expandable="true" newslot="-2" n="<%=slot-1%>">..more..</slot>
+		<%if (showscore){%><span class="<%=scoreclass%>"><%=(score*100).toFixed(0)+'%'%></span><%}%>
+		<%=text%>
+		<slot expandable="true" newslot="2" n="<%=lastslot%>">..more..</slot>
+	</div>
 </div>
 </div>
