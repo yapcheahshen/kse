@@ -1,17 +1,22 @@
 define(['underscore','text!./tofind.tmpl'], 
   function(_,template) {
   return {
-    type: 'Backbone',
+    type: 'Backbone.nested',
     events: {
-    	"keyup #tofind":"dosearch",
+    	"keyup #query":"dosearch",
+    },
+    commands:{
+      "setquery":function(query) {
+        this.$("#query").val(query);
+        this.dosearch();
+      }
     },
     dosearch:function() {
         if (this.timer) clearTimeout(this.timer);
         var that=this;
         this.timer=setTimeout(function(){
-          var tofind=that.$("#tofind").val();
-          that.sandbox.emit('tofind.change',tofind);
-          localStorage.setItem("tofind",tofind);
+          var query=that.$("#query").val();
+          that.sendParent("query.change",query);
         },300);
     },
     render:function() {
@@ -19,12 +24,8 @@ define(['underscore','text!./tofind.tmpl'],
       this.$el.find("#tofind").focus();
     },
     initialize: function() {
+      this.initNested();
      	this.render();
-      var that=this;
-      setTimeout(function(){
-        that.$("#tofind").val(localStorage.getItem("tofind"));
-        that.dosearch();
-      },100)
     }
   };
 });
