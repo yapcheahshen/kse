@@ -101,12 +101,12 @@ define(['underscore','backbone',
       return out;
     },
     getscoreclass:function(score) {
-      var scoreclass='label '
-        if (score>0.9) scoreclass+='label-success';
-        else if (score>0.8) scoreclass+='label-primary';
-        else if (score>0.7) scoreclass+='label-info';
-        else if (score>0.6) scoreclass+='label-warning';
-        else scoreclass+='label-danger';
+      var scoreclass='';
+        if (score>0.9) scoreclass+='success';
+        else if (score>0.8) scoreclass+='primary';
+        else if (score>0.7) scoreclass+='info';
+        else if (score>0.6) scoreclass+='warning';
+        else scoreclass+='danger';
         return scoreclass;
     },
     //this is quite complicated..no refactor
@@ -129,7 +129,8 @@ define(['underscore','backbone',
         D=this.results.matched[i];
         var score=D[0],scoreclass=this.getscoreclass(score);
         var seq=i+startfrom;
-        var o={showscore:showscore,seq:seq,
+        var previousmore=!this.results.opts.groupunit;
+        var o={showscore:showscore,seq:seq,previousmore:previousmore,
           slot:sourceinfos[i].slot,lastslot:sourceinfos[i].lastslot,
           score:score,text:texts[D[1]],sourceinfo:sourceinfos[i],scoreclass:scoreclass};
         var newitem=_.template(itemtemplate,o);

@@ -1,4 +1,6 @@
 <div  class="resultitem">
+<div class="row">
+	<div class="col-md-4">
 	<span class="label label-info"><%=seq+1%></span>
 
 	<%if (typeof closest!='undefined'){%>
@@ -16,10 +18,24 @@
 		<%}%>
 		</span>
 	<%}%>
-<div class="row">
-	<div class="col-md-12" data-slot="<%=slot%>">
+	<%if (showscore){%><%=(score*100).toFixed(0)+'%'%><%}%>
+	</div>
+	<div class="col-md-4">
+		<%if (previousmore){%>
 		<slot expandable="true" newslot="-2" n="<%=slot-1%>">..more..</slot>
-		<%if (showscore){%><span class="<%=scoreclass%>"><%=(score*100).toFixed(0)+'%'%></span><%}%>
+		<%}%>
+		<%if (showscore){%>
+		<div class="progress">
+		  <div class="progress-bar progress-bar-<%=scoreclass%>" role="progressbar" aria-valuenow="<%=(score*100).toFixed(0)+'%'%>" aria-valuemin="0" aria-valuemax="100" style="width: <%=(score*100).toFixed(0)+'%'%>">
+		    <span class="sr-only"><%=(score*100).toFixed(0)+'%'%></span>
+		  </div>
+		</div>
+
+		<%}%>
+	</div>
+	</div>
+<div class="row">
+	<div class="col-md-12"  data-slot="<%=slot%>">
 		<%=text%>
 		<slot expandable="true" newslot="2" n="<%=lastslot%>">..more..</slot>
 	</div>
