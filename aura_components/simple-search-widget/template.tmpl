@@ -3,7 +3,7 @@
 	<div class="col-md-10">
 	<div id="matchpanel" class="panel panel-success">
 	<div class="row panel-body text-center">
-		<div data-aura-widget="select-db-widget" data-type="radio"></div>
+		<div data-aura-component="select-db-widget@kse" data-type="radio"></div>
 	</div>
 	</div>
 	
@@ -13,20 +13,16 @@
 </div>
 </div>
 
-<div class="row">
-	<div class="col-md-1"></div>
-	<div class="col-md-9">
-		<div class="input-group input-group-lg">
-			 <span class="input-group-addon">Search</span>
-			<input class="form-control" style="font-size:150%" id="tofind" type="text" value="<%=value%>" placeholder=""></input> 
-			 <span id="cleartofind" title="Clear Tofind" class="btn btn-danger input-group-addon">×</span>
-		</div>
-	</div>
+<div class="row no-margin">
+	<div class="col-md-12">
+	<div data-aura-component="tofind-widget@kse"></div>
 </div>
-<div class="row" id="searchhelp">
-	<div class="col-md-2"></div>
-	<div class="col-md-10">
-		search help
-	 </div>
 </div>
-<div  id="searchresult" data-aura-widget="resultlist-widget" style="overflow-x:hidden"></div>
+
+<div class="row no-margin" id="searchhelp">
+	<div class="col-md-12">
+	<div data-aura-component="search-help-widget@kse"></div>
+</div>
+</div>
+
+<div  id="searchresult" data-aura-component="resultlist-widget@kse" style="overflow-x:hidden"></div>

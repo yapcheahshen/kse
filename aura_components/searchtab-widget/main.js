@@ -23,7 +23,7 @@ define(['backbone','text!./template.tmpl','text!./itemtemplate.tmpl','text!../co
 
       this.$el.find("#pills").append( _.template(itemtemplate,opts));
       var pillcontent=this.$el.find(".tab-content");
-      var newpill=$('<div id="'+pillid+'" class="tab-pane"><div style="overflow-x:hidden" data-aura-widget="'+widget+'"></div></div>');
+      var newpill=$('<div id="'+pillid+'" class="tab-pane"><div style="overflow-x:hidden" data-aura-component="'+widget+'"></div></div>');
       pillcontent.append(newpill);
       //this.sandbox.start(pillcontent.find("#"+pillid)); //parent container will start me
   	},

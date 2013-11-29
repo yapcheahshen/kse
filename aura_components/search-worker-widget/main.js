@@ -25,9 +25,9 @@ define(['backbone'], function(Backbone) {
       var closesttag=[pagebreak,'readunit[id]','p[n]'];
       var distance=this.model.get("")
 
-      var opts={output:["text"],sourceinfo:true,
+      var opts={output:["text","sourceinfo"],rank:"vsm",
           rangestart:rangestart,rangeend:rangeend, closesttag:closesttag,
-          query:this.model.get("query"),distance:this.model.get("distance"),
+          query:this.model.get("query"),
           start:start||0, max:20, db:this.db};
 
       this.$yase("search",opts).done(function(data) {

@@ -1,19 +1,23 @@
 define(['underscore','text!./template.tmpl','backbone'], 
  function(_,template,Backbone) {
   return {
-   type:"Backbone",
+   type:"Backbone.nested",
     events: {
       "click input[name='selectdb']":"selectdb",
     },
+    commands: {
+      "setdbhit":"setdbhit",
+      "ready":"ready"
+    },
     selectdb:function(e){
       var db=$(e.target).data('db');
-      this.sandbox.emit("selectdb",db);
+      this.sendParent("selectdb",db);
     },
     getpath:function(path) {
       var that=this;
-      this.sandbox.yase.getRaw(path, function(err,data) {
-        that.model.set("dbs",data);
-        that.sandbox.emit('enumdb',data);
+      this.$yase("getRaw",path).done(function(data) {
+        this.model.set("dbs",data);
+        this.sendParent('enumdb',data);
       });
     }, 
     setdbhit:function(db,hit) {
@@ -36,11 +40,13 @@ define(['underscore','text!./template.tmpl','backbone'],
       this.html(_.template(template,{dbs:dbs}) );
       this.$el.find("input:first").click();
     },
+    ready:function() {
+      this.getpath([]);
+    },
     initialize: function() {
       this.model=new Backbone.Model();
-      this.getpath([]);
       this.model.on("change:dbs",this.render,this);
-      this.sandbox.on('setdbhit',this.setdbhit,this);
+      this.initNested();
     }
   }
 });

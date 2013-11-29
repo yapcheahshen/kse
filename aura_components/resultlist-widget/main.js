@@ -2,12 +2,17 @@ define(['underscore','backbone',
   'text!./results.tmpl','text!./item.tmpl'], 
  function(_,Backbone,template,itemtemplate) {
   return {
+   type:"Backbone.nested",
    events:{
     "mousemove .resultitem":"resultitemhover",
     "click .opentext":"opentext",
     "click slot":"openslot"
    },
-   type:"Backbone",
+   commands:{
+     "newresult":"render",
+     "moreresult":"moreresult",
+     "totalslot":"settotalslot"
+   },
    getslots:function(n,newslot) {
     var slots=[];
     if (newslot>0) {
@@ -76,9 +81,9 @@ define(['underscore','backbone',
       });
     },
     moreresult:function(data) {
-      this.results=data;
-      this.fetched+=data.matched.length;
-      this.remain=data.matched.length;
+      this.R=data;
+      this.fetched+=data.result.length;
+      this.remain=data.result.length;
       this.loadscreenful();
     },
     samegroup:function(res,i) {
@@ -114,48 +119,48 @@ define(['underscore','backbone',
       var screenheight=this.$el.innerHeight();
       var $listgroup=$(".results");
       var startheight=$listgroup.height();
-      if (this.displayed>=this.results.doccount) return;
+      if (this.displayed>=this.R.doccount) return;
       
-      var H=0, texts=this.results.texts, sourceinfos=this.results.sourceinfo;
-      var showscore=!!this.results.opts.rank;
+      var H=0, showscore=!!this.R.opts.rank;
       var that=this;
-      var i=this.results.matched.length-this.remain;
+ 
+      var start=this.R.result.length-this.remain;
+
       if (this.remain<=0) {
-        that.sandbox.emit("more"+that.group,that.fetched);
+        that.sendParent("more",that.fetched);
         return true;
       }
-      var startfrom=this.fetched-this.results.matched.length;
-      do { 
-        D=this.results.matched[i];
-        var score=D[0],scoreclass=this.getscoreclass(score);
+      var startfrom=this.fetched-this.R.result.length;
+      var i=start;
+      do {
+        var D=this.R.result[i];
+        var score=D.score,scoreclass=this.getscoreclass(score);
         var seq=i+startfrom;
-        var previousmore=!this.results.opts.groupunit;
+        var previousmore=!this.R.opts.groupunit;
         var o={showscore:showscore,seq:seq,previousmore:previousmore,
-          slot:sourceinfos[i].slot,lastslot:sourceinfos[i].lastslot,
-          score:score,text:texts[D[1]],sourceinfo:sourceinfos[i],scoreclass:scoreclass};
+          slot:D.slot,lastslot:D.lastslot,
+          score:score,text:D.text,sourceinfo:D.sourceinfo,scoreclass:scoreclass};
         var newitem=_.template(itemtemplate,o);
         $listgroup.append(newitem); // this is slow  to get newitem height()
         that.remain--;
         that.displayed++;
         i++;
         if (that.remain<0) {
-          that.sandbox.emit("more"+that.group,that.fetched);
+          that.sendParent("more",that.fetched);
           return true;
-        }        
+        } 
+
       } while ( $listgroup.height()<screenheight+startheight && that.remain);
 
     },
-    render: function (data,db,tofind,searchtype,distance) {
+    render: function (data) {//,db,tofind,searchtype,distance) {
       if (!data) return;
-      this.results=[];
-      this.db=db;
+      this.db=data.db;
       this.displayed=0;
-      this.fetched=data.matched.length;
-      this.results=data;
-      this.remain=data.matched.length;
-      if (typeof tofind!='string') tofind=JSON.stringify(tofind);
-      this.html(_.template(template,{tofind:tofind,
-        searchtype:searchtype,distance:distance}));
+      this.fetched=data.result.length;
+      this.R=data;
+      this.remain=data.result.length;
+      this.html(_.template(template,{query:data.opts.query}));
       this.resize();
       this.loadscreenful();
     },
@@ -167,24 +172,9 @@ define(['underscore','backbone',
         that.$el.find("#totalhits").html(hitcount);
       },500)
     },
-    finalize:function() {
-     this.sandbox.off("newresult"+this.group,this.render);
-     this.sandbox.off("moreresult"+this.group,this.moreresult);
-     this.sandbox.off("totalslot"+this.group,this.settotalslot);
-     this.sandbox.off("resize",this.resize);
-     console.log("resultlist finalized")
-    },
-
     initialize: function() {
-     this.groupid=this.options.groupid;
-     this.group="";
-     this.$yase=this.sandbox.$yase.bind(this);
-     if (this.options.groupid) this.group="."+this.options.groupid;
-     this.sandbox.on("newresult"+this.group,this.render,this);
-     this.sandbox.on("moreresult"+this.group,this.moreresult,this);
-     this.sandbox.on("totalslot"+this.group,this.settotalslot,this);
-     this.sandbox.on("resize",this.resize,this);
-     this.sandbox.once("finalize"+this.group,this.finalize,this);
+     //this.sandbox.on("resize",this.resize,this);
+     this.initNested();
     }
   }
 });

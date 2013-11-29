@@ -3,7 +3,7 @@ define(['underscore','backbone',
   ], 
   function(_,backbone,template,tabtemplate) {
   return {
-  //  type: 'Backbone',
+    type: 'Backbone.nested',
     events:{
       'view':'viewevent',
       'show.bs.tab a[data-toggle="tab"]':"showtab",
@@ -28,8 +28,13 @@ define(['underscore','backbone',
       //var model=tabcontent.data('model');
       var model=this.tabs.get(tabid.substring(1));
       this.tabs.remove(model);
-      this.sandbox.emit("finalize."+'T'+model.cid);
+
+      //this.sandbox.emit("finalize."+'T'+model.cid);
       content.remove();
+      /* TODO
+        notify all widget in the tab
+      */
+      console.log('notify all widget in this tab')
       $('#tabs a:last').tab('show');
     },
     removetab:function(m)   {
@@ -64,6 +69,7 @@ define(['underscore','backbone',
       setTimeout(function() {
         that.resize();
       },1000);
+      this.addChildren();
     },
     addtab:function(m) {
       var widget=m.get('widget');
@@ -76,7 +82,7 @@ define(['underscore','backbone',
       this.$el.find("#tabs").append( _.template(tabtemplate,opts));
       var tabcontentheight=this.$el.parent().height()-this.$el.find("#tabs").height()-5;
       var tabcontent=this.$el.find("#tabuicontent");
-      var newtab='<div id="'+tabid+'" class="tab-pane"><div data-id="'+tabid+'"data-aura-widget="'+widget+'"></div></div>';
+      var newtab='<div id="'+tabid+'" class="tab-pane"><div data-id="'+tabid+'"data-aura-component="'+widget+'"></div></div>';
       tabcontent.append(newtab);
       
       var $newtab=tabcontent.find("#"+tabid);
@@ -88,7 +94,7 @@ define(['underscore','backbone',
       });
 
       this.sandbox.start($newtab);
-
+      this.addChild($newtab);
     },
     createtabs:function(str) {
       if (!str) return;
