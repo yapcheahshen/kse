@@ -1,7 +1,7 @@
 define(['underscore','text!./template.tmpl'], 
   function(_,template) {
   return {
-    type: 'Backbone',
+    type: 'Backbone.nested',
     newtab:function(e) {
       var opts={tabsid:this.readerid,name:'abc',widget:'text-widget@kse'};
       this.sandbox.emit("newtab",opts);
@@ -13,8 +13,10 @@ define(['underscore','text!./template.tmpl'],
       }
       this.readerid=opts.readerid='reader-'+_.uniqueId();
       this.html(_.template(template,opts) );
+      this.addChildren();
     },
     initialize: function() {
+      this.initNested();
      	this.render();
       var that=this;
     }

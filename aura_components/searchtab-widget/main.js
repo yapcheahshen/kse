@@ -1,11 +1,17 @@
 define(['backbone','text!./template.tmpl','text!./itemtemplate.tmpl','text!../config.json'], 
 	function(Backbone,template,itemtemplate,config) {
   return {
- //   type: 'Backbone',
+  type: 'Backbone.nested',
 	render:function() {
 		this.html(template);
-    	this.createtabs(this.config.searchtab);
-    	//this.resize();
+    this.createtabs(this.config.searchtab);
+    //this.resize();
+    var promise=this.addChildren();
+
+    promise.done(function(){
+        console.clear();
+        console.log('all search tab loaded')
+    })    
 	} ,
     resize:function() {
       var that=this;
@@ -34,8 +40,10 @@ define(['backbone','text!./template.tmpl','text!./itemtemplate.tmpl','text!../co
     },
     model:new Backbone.Model(),
     initialize: function() {
+      this.initNested();
     	this.config=JSON.parse(config);
     	this.render();
+
     }
   };
 });

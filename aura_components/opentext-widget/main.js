@@ -1,7 +1,7 @@
 define(['underscore','backbone','text!./template.tmpl','text!./linkable.tmpl','text!../config.json'], 
   function(_,Backbone,template,linkable,config) {
   return {
-    type: 'Backbone',
+    type: 'Backbone.nested',
     events: {
       "click #opentext":"opentext"
     },
@@ -39,6 +39,7 @@ define(['underscore','backbone','text!./template.tmpl','text!./linkable.tmpl','t
     },
     render:function() {
       this.html(_.template(template,{}) );
+      this.addChildren();
     },
     addlinkable:function(m) {
       this.$el.find("#linkables").append(_.template(linkable,m.attributes));
@@ -53,6 +54,7 @@ define(['underscore','backbone','text!./template.tmpl','text!./linkable.tmpl','t
     },
     model:new Backbone.Model(),
     initialize: function() {
+      this.initNested();
       this.config=JSON.parse(config);
       this.db=this.config.db;
       this.linkdb=this.config.linkdb;
@@ -61,6 +63,7 @@ define(['underscore','backbone','text!./template.tmpl','text!./linkable.tmpl','t
       if (typeof this.linkdb=='string') this.linkdb=[this.linkdb];
       
       this.render();
+      
       this.sandbox.on('dbslotselected',this.selected,this);
     }
   };

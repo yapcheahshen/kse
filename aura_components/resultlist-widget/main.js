@@ -1,5 +1,5 @@
 define(['underscore','backbone',
-  'text!./results.tmpl','text!./item.tmpl'], 
+  'text!./template.tmpl','text!./item.tmpl'], 
  function(_,Backbone,template,itemtemplate) {
   return {
    type:"Backbone.nested",
@@ -123,11 +123,11 @@ define(['underscore','backbone',
       
       var H=0, showscore=!!this.R.opts.rank;
       var that=this;
- 
+      if (!this.R.result.length)  return;
       var start=this.R.result.length-this.remain;
 
       if (this.remain<=0) {
-        that.sendParent("more",that.fetched);
+        that.sendParent("needmore",that.fetched);
         return true;
       }
       var startfrom=this.fetched-this.R.result.length;
@@ -146,7 +146,7 @@ define(['underscore','backbone',
         that.displayed++;
         i++;
         if (that.remain<0) {
-          that.sendParent("more",that.fetched);
+          that.sendParent("needmore",that.fetched);
           return true;
         } 
 

@@ -6,8 +6,9 @@ define(['underscore','backbone','text!./template.tmpl'],
 
     },
     commands:{
-
+  
     }, 
+
     render:function() {
       this.html(_.template(template));
       this.addChildren();

@@ -4,7 +4,7 @@ define(['backbone'], function(Backbone) {
     commands:{
       "query.change":"querychange",
       "setrange":"setrange",
-      "moreresult":"dosearch"
+      "more":"dosearch",
     },
     querychange:function(query,db) {
       this.model.set({"rangestart":0,"rangeend":-1});

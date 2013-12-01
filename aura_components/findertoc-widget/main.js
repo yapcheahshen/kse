@@ -2,11 +2,13 @@ define(['underscore','backbone',
   'text!./template.tmpl','text!./dropdown.tmpl','text!./listgroup.tmpl'], 
   function(_,Backbone,template,dropdowntemplate,listgrouptemplate) {
   return {
-    type: 'Backbone',
+    type: 'Backbone.nested',
     events: {
       "click .list-group-item":"itemclick",
     },
-
+    commands:{
+      "settoc":"settoc"
+    },
     itemclick:function(e) {
       var item=$(e.target);
       if (e.target.tagName!='A') item=item.parent();
@@ -40,17 +42,16 @@ define(['underscore','backbone',
         }
         return this.toctree;
     },
-    buildtoc:function(tofind,searchtype) {
-      var that=this;
-      var opts={db:this.db, tofind:tofind, searchtype:searchtype,
-        toc:this.tocsetting, hidenohit:this.hidenohit}
-      this.sandbox.yase.buildToc(opts,function(err,toc){
-        that.flattoc=new that.sandbox.flattoc();
-        that.flattoc.set(toc);
-        that.toc=toc;
-        that.toctree=that.flattoc.go(0);
-        that.filltoc();
-        that.render();
+    buildtoc:function(db,query) {
+      var opts={db:db, query:query,
+                toc:this.tocsetting, hidenohit:this.hidenohit}
+      this.$yase("buildToc",opts).done(function(toc){
+        this.flattoc=new this.sandbox.flattoc();
+        this.flattoc.set(toc);
+        this.toc=toc;
+        this.toctree=this.flattoc.go(0);
+        this.filltoc();
+        this.render();
       })
     },
     findactive:function(toctree) {
@@ -101,12 +102,10 @@ define(['underscore','backbone',
       this.hidescrollbar();
     },
     model:new Backbone.Model(),
-    init:function(id,opts) {
-      if (id!=this.id) return;
-      this.db=opts.db;
+    settoc:function(opts) {
       this.tocsetting=opts.toc;
       this.hidenohit=opts.hidenohit;
-      this.buildtoc(opts.tofind,opts.searchtype);
+      this.buildtoc(opts.db,opts.query);
       this.itemstyle=opts.itemstyle||this.options.itemStyle ;
 
       this.itemstyle=this.itemstyle || "listgroup";
@@ -114,12 +113,7 @@ define(['underscore','backbone',
       this.itemtemplate=eval(this.itemstyle+"template");
     },
     initialize: function() {
-      this.groupid=this.options.groupid;
-      this.group="";
-      this.id='ft'+Math.round(Math.random()*10000);
-      if (this.groupid) this.group="."+this.groupid;
-      this.sandbox.once("init"+this.group,this.init,this);
-      this.sandbox.emit("initialized"+this.group,this.id);
+      this.initNested();
     }
   };
 });

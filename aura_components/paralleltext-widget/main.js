@@ -6,7 +6,7 @@
 define(['underscore','backbone','text!./text.tmpl'], 
   function(_,Backbone,template) {
   return {
-    type: 'Backbone',
+    type: 'Backbone.nested',
     events:{
           "mousemove p[n]":"paragraphhover",
           "click #btnsync":"syncparallel"
@@ -44,6 +44,7 @@ define(['underscore','backbone','text!./text.tmpl'],
       }
 
       this.html(_.template(template,opts) ); 
+      this.addChildren();
     },
     getheight:function() {
       var p=$(".mainview");
@@ -95,6 +96,7 @@ define(['underscore','backbone','text!./text.tmpl'],
     },
     initialize: function() {
       this.model=new Backbone.Model();
+      this.initNested();
       this.controllerheight=20;
       //this.textwidget=this.config.defaulttextwidget;
       this.viewid=this.options.id;
@@ -102,6 +104,7 @@ define(['underscore','backbone','text!./text.tmpl'],
       this.sandbox.on("resize",this.resize,this);
       this.sandbox.emit('initialized.'+this.viewid);
       this.sandbox.on("syncpara."+this.viewid,this.syncpara,this);
+      
     }
   };
 });

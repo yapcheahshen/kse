@@ -79,7 +79,7 @@ define(['underscore','backbone','text!./template.tmpl',
         });
       }
 
-      /*
+      
       for (var i in dbs) {
         promises.push(this.$yase("search",{query:query,db:dbs[i].name}));
       }
@@ -91,7 +91,7 @@ define(['underscore','backbone','text!./template.tmpl',
           that.showhitcount(D.doccount,D.opts.db);
         }
       });
-      */
+      
     },
     render:function() {
       this.html(_.template(template,{ value:this.options.value||""}) );
