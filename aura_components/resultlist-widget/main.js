@@ -49,12 +49,8 @@ define(['underscore','backbone',
    },
    opentext:function(e) {
      var slot=$(e.target).data('slot');
-     var tofind=this.$el.find(".results").data('tofind');
-     var searchtype=this.$el.find(".results").data('searchtype');
-     var distance=this.$el.find(".results").data('distance');
-     var opts={db:this.db,slot:slot,tofind:tofind,
-      searchtype:searchtype,distance:distance}
-     this.sandbox.emit("gotosource",opts);
+     var opts={db:this.db,slot:slot,query:this.query};
+     this.sendParent("gotosource",opts);
    },
    resultitemhover:function(e) {
     $e=$(e.target);
@@ -62,7 +58,7 @@ define(['underscore','backbone',
       $e=$e.parent();
     }
     var top=$e.offset().top;
-    var $listmenu=this.$el.find("#listmenu");
+    var $listmenu=this.$("#listmenu");
     $listmenu.offset({top:top})
     var slot=$e.find("[data-slot]").data("slot");
     $listmenu.data("slot",slot);
@@ -160,7 +156,8 @@ define(['underscore','backbone',
       this.fetched=data.result.length;
       this.R=data;
       this.remain=data.result.length;
-      this.html(_.template(template,{query:data.opts.query}));
+      this.query=data.opts.query;
+      this.html(_.template(template,{}));
       this.resize();
       this.loadscreenful();
     },
@@ -168,8 +165,8 @@ define(['underscore','backbone',
       var that=this;//totalslot might come later
       setTimeout(function(){
         that.totalslot=count;
-        that.$el.find("#totalslot").html(count);
-        that.$el.find("#totalhits").html(hitcount);
+        that.$("#totalslot").html(count);
+        that.$("#totalhits").html(hitcount);
       },500)
     },
     initialize: function() {

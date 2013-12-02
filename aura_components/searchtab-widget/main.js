@@ -9,8 +9,8 @@ define(['backbone','text!./template.tmpl','text!./itemtemplate.tmpl','text!../co
     var promise=this.addChildren();
 
     promise.done(function(){
-        console.clear();
-        console.log('all search tab loaded')
+        //console.clear();
+        console.log('all search tab loaded',this.toString())
     })    
 	} ,
     resize:function() {

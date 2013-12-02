@@ -8,13 +8,14 @@ define(['underscore','backbone','text!./text.tmpl'],
   return {
     type: 'Backbone.nested',
     events:{
-          "mousemove p[n]":"paragraphhover",
-          "click #btnsync":"syncparallel"
+          "mousemove p[n]":"paragraphhover"
     },
-    syncparallel:function(e) {
-      console.log('sync')
+    commands:{
+      "syncpara":"syncpara"
     },
-    paragraphhover:function(e) {
+    syncpara:function(opts) {
+      this.sendChildren("scrollpara", opts.scrollto, opts.offset,opts.from);
+    },    paragraphhover:function(e) {
       $e=$(e.target);
       while ($e.length && !$e.is('p')) {
         $e=$e.parent();
@@ -27,24 +28,28 @@ define(['underscore','backbone','text!./text.tmpl'],
       //$listmenu.data("slot",slot);
     },
     loadtext:function(id) {
-      var seq=parseInt(id.substring(id.lastIndexOf('-')+1),10);
       console.log('loadtext',seq);
-      var m=this.model.attributes;
-      m.db=m.cols[seq].db;
-      m.start=m.cols[seq].start;
-      m.paralleltext=this.viewid;
       this.sandbox.emit('init.'+id, m);
     },
     render:function() {
       var coltexts=this.coltexts.toJSON();
       var h=this.getheight();
-      opts={T:coltexts,widget:this.model.get('textwidget'),height:h};
-      for (var i in coltexts) {
-        this.sandbox.once('initialized.'+coltexts[i].id,this.loadtext,this)
-      }
+      opts={T:coltexts,component:this.model.get('textwidget'),height:h};
 
       this.html(_.template(template,opts) ); 
-      this.addChildren();
+
+      var extras=[];//when children is added, this will be send to child view onAdd
+      for (var i in coltexts) {
+        var m=this.model.attributes;
+        var r={};
+        r.db=m.cols[i].db;
+        r.start=m.cols[i].start;
+        r.scrollto=m.scrollto;
+        r.query=m.query;
+        extras.push(r)
+      }
+
+      this.addChildren(extras);
     },
     getheight:function() {
       var p=$(".mainview");
@@ -71,40 +76,22 @@ define(['underscore','backbone','text!./text.tmpl'],
       if (!coltexts[0].col) this.autolayout(coltexts);
       var count=0;
       for (var i in coltexts) {
-        coltexts[i].id=this.viewid+'-text-'+count;
+        coltexts[i].id=this.cid+'-text-'+count;
         count++;
       }
       this.coltexts.reset(coltexts);
       this.render();
     },
     coltexts:new Backbone.Collection(),
-    init:function(opts) {
+    onAdd:function(opts) {
       this.model.set(opts);
       this.settext(opts.cols);
     },
-    syncpara:function(opts) {
-      for (var i in this.coltexts.models) {
-        var id=this.coltexts.models[i].get('id');
-        if (id!=opts.from) {
-          this.sandbox.emit("scrollto."+id, opts.scrollto, opts.offset);
-        }
-      }
-    },
-    finalize:function() {
-      this.sandbox.off("resize",this.resize);
-      this.sandbox.off("init."+this.viewid,this.init);
-    },
+
     initialize: function() {
       this.model=new Backbone.Model();
       this.initNested();
       this.controllerheight=20;
-      //this.textwidget=this.config.defaulttextwidget;
-      this.viewid=this.options.id;
-      this.sandbox.once("init."+this.viewid,this.init,this);
-      this.sandbox.on("resize",this.resize,this);
-      this.sandbox.emit('initialized.'+this.viewid);
-      this.sandbox.on("syncpara."+this.viewid,this.syncpara,this);
-      
     }
   };
 });

@@ -7,7 +7,7 @@ define(['underscore','backbone','text!./text.tmpl','text!../config.json'],
       var opts2={widget:"paralleltext-widget@kse",
       name:opts.name,focus:true,
       extra:{textwidget:this.config.defaulttextwidget,
-        tofind:opts.tofind,searchtype:opts.searchtype,
+        query:opts.query,
         scrollto:opts.scrollto,cols:opts.texts}};
       this.sandbox.emit("newtab",opts2);
     },

@@ -22,19 +22,16 @@ define(['underscore','backbone',
       if (!tab) {
         console.error('tab id not found '+tabid);
         return;
-      }
-      tab.remove();
+      }      
       var content=this.$el.find("#tabuicontent #"+tabid);
-      //var model=tabcontent.data('model');
+
+      var view=content.find("[data-aura-component]").data('hview');
+      if (view) view.close();
+      content.remove();
+      
+      tab.remove();
       var model=this.tabs.get(tabid.substring(1));
       this.tabs.remove(model);
-
-      //this.sandbox.emit("finalize."+'T'+model.cid);
-      content.remove();
-      /* TODO
-        notify all widget in the tab
-      */
-      console.log('notify all widget in this tab')
       $('#tabs a:last').tab('show');
     },
     removetab:function(m)   {
@@ -82,20 +79,19 @@ define(['underscore','backbone',
       this.$el.find("#tabs").append( _.template(tabtemplate,opts));
       var tabcontentheight=this.$el.parent().height()-this.$el.find("#tabs").height()-5;
       var tabcontent=this.$el.find("#tabuicontent");
-      var newtab='<div id="'+tabid+'" class="tab-pane"><div data-id="'+tabid+'"data-aura-component="'+widget+'"></div></div>';
+      var newtab='<div id="'+tabid+'" class="tab-pane"><div data-id="'+tabid+'" data-aura-component="'+widget+'"></div></div>';
       tabcontent.append(newtab);
       
       var $newtab=tabcontent.find("#"+tabid);
       $newtab.height(tabcontentheight);
       if (m.get("focus")) this.$el.find("#tabs a[href=#"+tabid+"]").click();
 
-      this.sandbox.once('initialized.'+tabid,function() {
-        that.sandbox.emit("init."+tabid,m.get('extra'));
-      });
-
-      this.sandbox.start($newtab);
-      this.addChild($newtab);
+      this.sandbox.start($newtab,{
+        callback:this.addChild.bind(this,$newtab.find('[data-aura-component]'),m.get('extra'))});
+//      setTimeout(),200);
+      //this.addChild($newtab);
     },
+
     createtabs:function(str) {
       if (!str) return;
       var tabs=str.split(',');
