@@ -24,7 +24,6 @@ define(['underscore','text!./tofind.tmpl'],
       this.$el.find("#tofind").focus();
     },
     initialize: function() {
-      this.initNested();
      	this.render();
     }
   };

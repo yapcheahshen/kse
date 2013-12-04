@@ -2,23 +2,17 @@ define(['backbone','text!./template.tmpl','text!./itemtemplate.tmpl','text!../co
 	function(Backbone,template,itemtemplate,config) {
   return {
   type: 'Backbone.nested',
-	render:function() {
-		this.html(template);
-    this.createtabs(this.config.searchtab);
+	  render:function() {
+	    this.html(template);
+      this.createtabs(this.config.searchtab);
     //this.resize();
-    var promise=this.addChildren();
-
-    promise.done(function(){
-        //console.clear();
-        console.log('all search tab loaded',this.toString())
-    })    
-	} ,
+	  } ,
     resize:function() {
       var that=this;
       var space=parseInt(this.options.space)||0;
       this.$el.css("height", (window.innerHeight - this.$el.offset().top -55-space)+"px");
     }, 	
-	addtab:function(opts) {
+	  addtab:function(opts) {
       var widget=opts.widget;
       var pillcount=this.model.get("pillcount")||0;
       pillcount++;
@@ -36,14 +30,13 @@ define(['backbone','text!./template.tmpl','text!./itemtemplate.tmpl','text!../co
 
     createtabs:function(tabs) {
     	for (var i in tabs) this.addtab(tabs[i]);
+      this.sandbox.start(this.$("#pills"));
     	this.$el.find("#pills a").first().click();
     },
     model:new Backbone.Model(),
     initialize: function() {
-      this.initNested();
-    	this.config=JSON.parse(config);
-    	this.render();
-
+    	this.config=JSON.parse(config); 
+      this.render();
     }
   };
 });

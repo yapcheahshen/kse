@@ -1,3 +1,7 @@
+/*
+TODO 
+allow user to add/remove column
+*/
 define(['underscore','backbone',
   'text!./texts.tmpl','text!./tabtemplate.tmpl'
   ], 
@@ -66,7 +70,6 @@ define(['underscore','backbone',
       setTimeout(function() {
         that.resize();
       },1000);
-      this.addChildren();
     },
     addtab:function(m) {
       var widget=m.get('widget');
@@ -86,12 +89,13 @@ define(['underscore','backbone',
       $newtab.height(tabcontentheight);
       if (m.get("focus")) this.$el.find("#tabs a[href=#"+tabid+"]").click();
 
-      this.sandbox.start($newtab,{
-        callback:this.addChild.bind(this,$newtab.find('[data-aura-component]'),m.get('extra'))});
-//      setTimeout(),200);
-      //this.addChild($newtab);
+      this.sandbox.start($newtab);
     },
-
+    onReady:function() {
+      if (!this.tabs.length) return;
+      var m=this.tabs.models[this.tabs.length-1];
+      this.sendLastChild("tabinit",m.get('extra'));
+    },
     createtabs:function(str) {
       if (!str) return;
       var tabs=str.split(',');

@@ -11,7 +11,8 @@ define(['underscore','backbone','text!./text.tmpl'],
           "mousemove p[n]":"paragraphhover"
     },
     commands:{
-      "syncpara":"syncpara"
+      "syncpara":"syncpara",
+      "tabinit":"tabinit"
     },
     syncpara:function(opts) {
       this.sendChildren("scrollpara", opts.scrollto, opts.offset,opts.from);
@@ -35,21 +36,21 @@ define(['underscore','backbone','text!./text.tmpl'],
       var coltexts=this.coltexts.toJSON();
       var h=this.getheight();
       opts={T:coltexts,component:this.model.get('textwidget'),height:h};
-
       this.html(_.template(template,opts) ); 
-
-      var extras=[];//when children is added, this will be send to child view onAdd
-      for (var i in coltexts) {
-        var m=this.model.attributes;
-        var r={};
-        r.db=m.cols[i].db;
-        r.start=m.cols[i].start;
-        r.scrollto=m.scrollto;
-        r.query=m.query;
-        extras.push(r)
-      }
-
-      this.addChildren(extras);
+    },
+    onReady:function() {
+    	var coltexts=this.coltexts.toJSON();
+    	var extras=[];
+        for (var i in coltexts) {
+          var m=this.model.attributes;
+          var r={};
+          r.db=m.cols[i].db;
+          r.start=m.cols[i].start;
+          r.scrollto=m.scrollto;
+          r.query=m.query;
+          extras.push(r)
+        }
+    	this.sendChildrenByArray("settext",extras);
     },
     getheight:function() {
       var p=$(".mainview");
@@ -71,7 +72,7 @@ define(['underscore','backbone','text!./text.tmpl'],
 
       for (var i in coltexts) coltexts[i].col=col;
     },
-    settext:function(coltexts) {
+    setupcolumn:function(coltexts) {
       if (coltexts.length==0) throw 'no text to show';
       if (!coltexts[0].col) this.autolayout(coltexts);
       var count=0;
@@ -83,14 +84,13 @@ define(['underscore','backbone','text!./text.tmpl'],
       this.render();
     },
     coltexts:new Backbone.Collection(),
-    onAdd:function(opts) {
+    tabinit:function(opts) {
       this.model.set(opts);
-      this.settext(opts.cols);
+      this.setupcolumn(opts.cols);
     },
 
     initialize: function() {
       this.model=new Backbone.Model();
-      this.initNested();
       this.controllerheight=20;
     }
   };

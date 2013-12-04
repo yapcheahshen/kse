@@ -163,15 +163,12 @@ define(['underscore','backbone',
     },
     settotalslot:function(count,hitcount) {
       var that=this;//totalslot might come later
-      setTimeout(function(){
-        that.totalslot=count;
-        that.$("#totalslot").html(count);
-        that.$("#totalhits").html(hitcount);
-      },500)
+      this.totalslot=count;
+      this.$("#totalslot").html(count);
+      this.$("#totalhits").html(hitcount);
     },
     initialize: function() {
      //this.sandbox.on("resize",this.resize,this);
-     this.initNested();
     }
   }
 });

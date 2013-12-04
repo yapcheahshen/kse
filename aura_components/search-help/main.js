@@ -6,16 +6,13 @@ define(['underscore','backbone','text!./template.tmpl'],
 
     },
     commands:{
-  
-    }, 
 
+    }, 
     render:function() {
       this.html(_.template(template));
-      this.addChildren();
     },
     model:new Backbone.Model(),
     initialize: function() {
-      this.initNested();
       this.render();
     }
   };

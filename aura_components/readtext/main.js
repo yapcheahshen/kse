@@ -6,7 +6,8 @@ define(['underscore','backbone','text!./text.tmpl','text!../config.json'],
       "click p[n]":"syncpara"
     },
     commands:{
-      "scrollpara":"scrollpara"
+      "scrollpara":"scrollpara",
+      "settext":"settext"
     },
     scrollpara:function(scrollto, offset,from) {
       if (from==this.cid) return;
@@ -64,7 +65,7 @@ define(['underscore','backbone','text!./text.tmpl','text!../config.json'],
       else this.fetchbytag();
     },
     model:new Backbone.Model(),
-    onAdd:function(opts) {
+    settext:function(opts) {
       this.start=opts.start;
       this.query=opts.query;
       this.scrollto=opts.scrollto;
@@ -72,7 +73,7 @@ define(['underscore','backbone','text!./text.tmpl','text!../config.json'],
       this.render();
     },
     initialize: function() {
-      this.initNested();
+
     }
   };
 });

@@ -46,7 +46,6 @@ define(['underscore','text!./template.tmpl','backbone'],
     initialize: function() {
       this.model=new Backbone.Model();
       this.model.on("change:dbs",this.render,this);
-      this.initNested();
     }
   }
 });

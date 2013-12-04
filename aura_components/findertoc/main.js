@@ -113,7 +113,6 @@ define(['underscore','backbone',
       this.itemtemplate=eval(this.itemstyle+"template");
     },
     initialize: function() {
-      this.initNested();
     }
   };
 });

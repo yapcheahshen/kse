@@ -19,15 +19,13 @@ define(['backbone'], function(Backbone) {
       if (query) this.dosearch(0);
     },
     dosearch:function(start) {
-      var rangestart=this.model.get("rangestart")||0;
-      var rangeend=this.model.get("rangeend")||-1;
-      var pagebreak=this.model.get("pagebreak");
-      var closesttag=[pagebreak,'readunit[id]','p[n]'];
-      var distance=this.model.get("")
+      var M=this.model.get.bind(this.model);
+      var closesttag=[M("pagebreak"),'readunit[id]','p[n]'];
+      var output=["text","sourceinfo"];
 
-      var opts={output:["text","sourceinfo"],rank:"vsm",
-          rangestart:rangestart,rangeend:rangeend, closesttag:closesttag,
-          query:this.model.get("query"),
+      var opts={query:M("query"),output:output,rank:M("rank")||"vsm",
+          rangestart:M("rangestart")||0,rangeend:M("rangeend")||-1, 
+          closesttag:closesttag,
           start:start||0, max:20, db:this.db};
 
       this.$yase("search",opts).done(function(data) {
@@ -36,7 +34,7 @@ define(['backbone'], function(Backbone) {
     },
     model:new Backbone.Model(),
     initialize: function() {
-      this.initNested();
+
     }
   };
 });

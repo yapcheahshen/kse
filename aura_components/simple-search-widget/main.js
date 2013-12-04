@@ -23,7 +23,7 @@ define(['underscore','backbone','text!./template.tmpl',
     gotosource:function(opts) {
       var extra={db:opts.db,start:opts.slot,scrollto:"",query:opts.query}
       var query=this.model.get('query');
-      var opts={widget:"text-widget",name:query,extra:extra,focus:true};
+      var opts={widget:"readtext",name:query,extra:extra,focus:true};
       this.sandbox.emit("newtab",opts);
     },         
     listresult:function(start) {
@@ -96,14 +96,12 @@ define(['underscore','backbone','text!./template.tmpl',
     render:function() {
       this.html(_.template(template,{ value:this.options.value||""}) );
       this.$el.find("#query").focus();
-      this.addChildren();
     },
     initialize: function() {
       var that=this;
       this.model=new Backbone.Model();
       this.config=JSON.parse(config);
       this.model.on("change:db",this.listresult.bind(this,0));
-      this.initNested();
       this.render();
 
       setTimeout(function () {
