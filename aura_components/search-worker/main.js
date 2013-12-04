@@ -6,10 +6,10 @@ define(['backbone'], function(Backbone) {
       "setrange":"setrange",
       "more":"dosearch",
     },
-    querychange:function(query,db) {
-      this.model.set({"rangestart":0,"rangeend":-1});
-      this.model.set("query",query);
-      if (db) this.db=db;
+    querychange:function(opts) {
+      this.model.set({"rangestart":opts.start||0,"rangeend":opts.end||-1});
+      this.model.set("query",opts.query);
+      if (opts.db) this.db=opts.db;
       this.dosearch();
     },
     setrange:function(rangestart,rangeend) {
@@ -24,7 +24,7 @@ define(['backbone'], function(Backbone) {
       var output=["text","sourceinfo"];
 
       var opts={query:M("query"),output:output,rank:M("rank")||"vsm",
-          rangestart:M("rangestart")||0,rangeend:M("rangeend")||-1, 
+          rangestart:M("rangestart"),rangeend:M("rangeend"), 
           closesttag:closesttag,
           start:start||0, max:20, db:this.db};
 

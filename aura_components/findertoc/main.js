@@ -15,6 +15,7 @@ define(['underscore','backbone',
       var slot=parseInt(item.data('slot'));
       this.toctree=this.flattoc.goslot(slot);
       var siblings=item.siblings();
+
       if (this.itemstyle=='dropdown') {
         siblings=item.parent().parent().find("li a");
       }
@@ -23,10 +24,17 @@ define(['underscore','backbone',
 
       this.model.set("slot",slot);
       this.model.set("updatedepth",item.data('depth'));
+      this.updaterange();
 
       this.filltoc();
       this.render();
+
       e.preventDefault();
+    },
+    updaterange:function() {
+      var rangestart=this.model.get('slot');
+      var rangeend=this.flattoc.rangeend(rangestart);
+      this.sendParent('setrange',rangestart,rangeend);      
     },
     filltoc:function() {
         for (var i in this.toctree) {
@@ -72,33 +80,32 @@ define(['underscore','backbone',
     render:function(upto) {
       /*TODO: render only children*/
       var res="", items=[];
-      var updatedepth=this.model.get("updatedepth")||-1;
-      if (updatedepth==-1) this.html(template);
+      var updatedepth=this.model.get("updatedepth");
+      if (typeof updatedepth=='undefined') this.html(template);
       console.log('render toc',this.group)
       $toc=this.$el.find("#toctree");
-      $needupdate=$toc.find("div[data-depth]").filter(function(){return $(this).attr('data-depth')>updatedepth});
+      $needupdate=$toc.find("div[data-depth]").filter(function(){return $(this).attr('data-depth')>=updatedepth});
       $needupdate.remove();
+
       var selectedleafnode=this.model.get('slot');
-      var rangestart=selectedleafnode;
 
       for (var i in this.toctree) {
         if (isNaN(parseInt(i))) continue;
         i=parseInt(i);
-        if (i<=updatedepth) continue; //no need to repaint
+        if (i<updatedepth) continue; //no need to repaint
 
         //TODO need to read from parent
         var obj={depth:i,tree:this.toctree[i],width:200,height:500};
 
         obj.active=this.findactive(this.toctree[i]);
         selectedleafnode=obj.tree[obj.active].slot;
-
         $toc.append(_.template( this.itemtemplate , obj));
       }
 
 
       this.model.set('slot',selectedleafnode);
-      this.sandbox.emit("dbslotselected",{db:this.db,slot:selectedleafnode});
-      this.sandbox.emit('setrange'+this.group,rangestart,-1);
+      this.sendParent("dbslotselected",{db:this.db,slot:selectedleafnode});
+     
       this.hidescrollbar();
     },
     model:new Backbone.Model(),
