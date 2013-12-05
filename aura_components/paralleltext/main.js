@@ -2,6 +2,8 @@
   TODO
   check dictionary
   a global rangy timer will check for selection
+
+ 
 */
 define(['underscore','backbone','text!./text.tmpl'], 
   function(_,Backbone,template) {
@@ -12,7 +14,8 @@ define(['underscore','backbone','text!./text.tmpl'],
     },
     commands:{
       "syncpara":"syncpara",
-      "tabinit":"tabinit"
+      "tabinit":"tabinit",
+      "resize":"resize"
     },
     syncpara:function(opts) {
       this.sendChildren("scrollpara", opts.scrollto, opts.offset,opts.from);
@@ -28,15 +31,13 @@ define(['underscore','backbone','text!./text.tmpl'],
       //var slot=$e.find("[data-slot]").data("slot");
       //$listmenu.data("slot",slot);
     },
-    loadtext:function(id) {
-      console.log('loadtext',seq);
-      this.sandbox.emit('init.'+id, m);
-    },
     render:function() {
       var coltexts=this.coltexts.toJSON();
       var h=this.getheight();
-      opts={T:coltexts,component:this.model.get('textwidget'),height:h};
-      this.html(_.template(template,opts) ); 
+      var dbselector=this.model.get("dbselector");
+      var dbselector=this.model.get("readtext");
+      var o={dbselector:dbselector,T:coltexts,component:dbselector,height:h};
+      this.html(_.template(template,o)); 
     },
     onReady:function() {
     	var coltexts=this.coltexts.toJSON();

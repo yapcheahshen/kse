@@ -66,6 +66,7 @@ define(['underscore','backbone','text!./text.tmpl','text!../config.json'],
     },
     model:new Backbone.Model(),
     settext:function(opts) {
+      if (!opts) return;
       this.start=opts.start;
       this.query=opts.query;
       this.scrollto=opts.scrollto;

@@ -4,10 +4,16 @@ define(['underscore','text!./template.tmpl','backbone'],
    type:"Backbone.nested",
     events: {
       "click input[name='selectdb']":"selectdb",
+      "click input#vsm":"togglerank",
     },
     commands: {
       "setdbhit":"setdbhit",
       "ready":"ready"
+    },
+    togglerank:function(e) {
+      var vsm=this.$("vsm").attr('checked');
+      console.log(vsm)
+
     },
     selectdb:function(e){
       var db=$(e.target).data('db');

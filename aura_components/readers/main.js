@@ -4,11 +4,12 @@ define(['underscore','backbone','text!./text.tmpl','text!../config.json'],
     type: 'Backbone.nested',
     newreader:function(opts) {
       //texts,name,scrollto
-      var opts2={widget:"paralleltext@kse",
+      var opts2={widget:"multitext@kse",
       name:opts.name,focus:true,
-      extra:{textwidget:this.config.defaulttextwidget,
+      extra:{readtext:this.config.defaulttextwidget,
         query:opts.query,
-        scrollto:opts.scrollto,cols:opts.texts}};
+        dbselector:this.config.dbselector||"select-db@kse",
+        scrollto:opts.scrollto,db:opts.db,start:opts.start}};
       this.sandbox.emit("newtab",opts2);
     },
     initialize: function() {
