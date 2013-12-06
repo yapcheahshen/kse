@@ -2,19 +2,29 @@
  kurūsu kammāsadhammaṃ 
 */
 define(['underscore','backbone',
-  'text!./template.tmpl','text!./texttemplate.tmpl','text!./menutemplate.tmpl'], 
-  function(_,Backbone,template,texttemplate,menutemplate) {
+  'text!./template.tmpl','text!./texttemplate.tmpl','text!./menutemplate.tmpl'
+  ,'text!./relatedtext.tmpl'], 
+  function(_,Backbone,template,texttemplate,menutemplate,relatedtext) {
   return {
     type: 'Backbone.nested',
     events: {
       "mouseenter p[n]":"enterpara",
       "mouseleave p[n]":"leavepara",
+      "click .relatedtext":"showrelated"
     },
     commands:{
        "tabinit":"tabinit", 
        "settext":"settext"
     }, 
+    showrelated:function(e) {
+      $e=$(e.target);
+      var db=$e.data('db');
+      var selector=$e.data('selector').split(",");
+      this.$yase("getTextByTag", {db:db, selector:selector}).done(function(data){
+        console.log(data.text)
+      })
 
+    },
     render:function() {
       var o={height:this.getheight()}
       this.html(_.template(template,o));
@@ -79,11 +89,11 @@ define(['underscore','backbone',
       if (!loaded) {
         var o={}; //find other db with same p[n]
         var value=$e.attr("n");
-
-        var opts={db:this.db,selector:[this.start,this.cssselector+'='+value],local:true};
+        var selector = [this.start,this.cssselector+'='+value];
+        var opts={db:this.db,selector:selector,local:true};
         var promise=this.$yase("sameId",opts);
         promise.done(function(data){
-          $e.find("#paramenu").html(_.template(menutemplate,{dbs:data}));
+          $e.find("#paramenu").html(_.template(menutemplate,{selector:selector.join(","),dbs:data}));
         })
       }
       menu.show();
