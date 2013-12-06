@@ -49,6 +49,8 @@ define(['underscore','backbone',
       if (!opts) return;
       this.$(".bodytext").html("loading text..." );
       this.start=opts.start;
+      this.cssselector=opts.scrollto.substring(0,opts.scrollto.indexOf("="));
+      this.csstag=this.cssselector.substring(0,this.cssselector.indexOf("["));
       this.query=opts.query;
       this.scrollto=opts.scrollto;
       this.db=opts.db;
@@ -63,25 +65,35 @@ define(['underscore','backbone',
       return p.height()-this.$el.offset().top-20;      
     },
     insertParagraphMenu:function() {
-      var paragraphs=this.$("p[n]");
+      var paragraphs=this.$(this.cssselector+']');
       paragraphs.append("<span id='paramenu'></span>");
     },
     enterpara:function(e) {
       $e=$(e.target);
-      while ($e.length && $e[0].tagName!='P') {
+      while ($e.length && $e[0].tagName!=this.csstag.toUpperCase()) {
         $e=$e.parent();
       }
-      var o={}; //find other db with same p[n]
-      $e.find("#paramenu").html(_.template(menutemplate,o));
-      var pn=$e.find("p[n]").attr("n");
+      
+      var menu=$e.find("#paramenu");
+      var loaded=menu.data('loaded');
+      if (!loaded) {
+        var o={}; //find other db with same p[n]
+        var value=$e.attr("n");
 
+        var opts={db:this.db,selector:[this.start,this.cssselector+'='+value],local:true};
+        var promise=this.$yase("sameId",opts);
+        promise.done(function(data){
+          $e.find("#paramenu").html(_.template(menutemplate,{dbs:data}));
+        })
+      }
+      menu.show();
     },   
     leavepara:function(e)  {
       $e=$(e.target);
       while ($e.length && $e[0].tagName!='P') {
         $e=$e.parent();
       }
-      $e.find("#paramenu").html("");
+      $e.find("#paramenu").hide();
     },
     model:new Backbone.Model(),
     initialize: function() {
