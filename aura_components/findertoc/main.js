@@ -82,7 +82,7 @@ define(['underscore','backbone',
       var res="", items=[];
       var updatedepth=this.model.get("updatedepth");
       if (typeof updatedepth=='undefined') this.html(template);
-      console.log('render toc',this.group)
+      
       $toc=this.$el.find("#toctree");
       $needupdate=$toc.find("div[data-depth]").filter(function(){return $(this).attr('data-depth')>=updatedepth});
       $needupdate.remove();

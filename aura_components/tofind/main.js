@@ -17,7 +17,7 @@ define(['underscore','text!./tofind.tmpl'],
         this.timer=setTimeout(function(){
           var query=that.$("#query").val();
           that.sendParent("query.change",{query:query});
-        },300);
+        },500);
     },
     render:function() {
       this.html(_.template(template,{ value:this.options.value||""}) );

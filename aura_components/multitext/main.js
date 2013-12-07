@@ -10,20 +10,36 @@ define(['underscore','backbone',
     events: {
       "mouseenter p[n]":"enterpara",
       "mouseleave p[n]":"leavepara",
-      "click .relatedtext":"showrelated"
+      "click .relatedtext":"showrelated",
+      "click .closerelated":"closerelated",
+      "mouseup .bodytext":"checkselection",
+      "dblclick .bodytext":"checkselection"
     },
     commands:{
        "tabinit":"tabinit", 
        "settext":"settext"
-    }, 
+    },
+    checkselection:function(e)  {
+      var sel = this.sandbox.rangy.getSelection().toHtml();
+      sel=sel.replace(/<.*?>/g,'').trim();
+      if (sel.indexOf(' ')==-1 &&sel) {
+        this.sendChildren("selectword",sel);
+      }
+    },
+    closerelated:function(e) {
+      $e=$(e.target).parent().parent();
+      $e.html('<a class="btn btn-info">'+$e.data('db')+'</a>');
+    },
     showrelated:function(e) {
-      $e=$(e.target);
+      $e=$(e.target).parent();
       var db=$e.data('db');
-      var selector=$e.data('selector').split(",");
-      this.$yase("getTextByTag", {db:db, selector:selector}).done(function(data){
-        console.log(data.text)
-      })
-
+      var sel=$e.data('selector');
+      if (!sel) return;
+      var selectors=sel.split(",");
+      this.$yase("getTextByTag", {db:db, selector:selectors}).done(function(data){
+        data.db=db;
+        $e.html(_.template(relatedtext,data));
+      });
     },
     render:function() {
       var o={height:this.getheight()}
@@ -85,8 +101,7 @@ define(['underscore','backbone',
       }
       
       var menu=$e.find("#paramenu");
-      var loaded=menu.data('loaded');
-      if (!loaded) {
+      if (!menu.data('loaded')) {
         var o={}; //find other db with same p[n]
         var value=$e.attr("n");
         var selector = [this.start,this.cssselector+'='+value];
@@ -95,15 +110,19 @@ define(['underscore','backbone',
         promise.done(function(data){
           $e.find("#paramenu").html(_.template(menutemplate,{selector:selector.join(","),dbs:data}));
         })
+        menu.data('loaded',true);
       }
-      menu.show();
+      menu.fadeIn();
     },   
     leavepara:function(e)  {
       $e=$(e.target);
       while ($e.length && $e[0].tagName!='P') {
         $e=$e.parent();
       }
-      $e.find("#paramenu").hide();
+      if ($e.find(".openedrelated").length==0) { //no opened related text
+        $e.find("#paramenu").fadeOut();  
+      }
+      
     },
     model:new Backbone.Model(),
     initialize: function() {

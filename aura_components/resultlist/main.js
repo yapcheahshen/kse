@@ -82,25 +82,6 @@ define(['underscore','backbone',
       this.remain=data.result.length;
       this.loadscreenful();
     },
-    samegroup:function(res,i) {
-      var next=i+1;
-      var out={count:0,result:res[i]};
-      if (next>=res.length) return out;
-      if (!res[i].closest) return out; //cannot group
-      var p1=res[i].closest[1].value+'.'+res[i].closest[2].value;
-      var slot=res[i].slot;
-      do {
-        var pnext=res[next].closest[1].value+'.'+res[next].closest[2].value;
-        if (p1==pnext) {
-          if (res[next].slot>slot+1) out.result.text+='...'; //not next slot
-          out.result.text+=res[next].text;
-          slot=res[next].slot;
-          out.count++;
-        } else break;
-        next++;
-      } while (next<res.length);
-      return out;
-    },
     getscoreclass:function(score) {
       var scoreclass='';
         if (score>0.9) scoreclass+='success';
@@ -133,8 +114,10 @@ define(['underscore','backbone',
         var score=D.score,scoreclass=this.getscoreclass(score);
         var seq=i+startfrom;
         var previousmore=!this.R.opts.groupunit;
+        var head=D.closest.head.replace(/<.*?>/g,'');
+
         var o={showscore:showscore,seq:seq,previousmore:previousmore,
-          slot:D.slot,lastslot:D.lastslot,
+          slot:D.slot,lastslot:D.lastslot,head:head,
           score:score,text:D.text,sourceinfo:D.sourceinfo,scoreclass:scoreclass};
         var newitem=_.template(itemtemplate,o);
         $listgroup.append(newitem); // this is slow  to get newitem height()

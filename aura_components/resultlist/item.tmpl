@@ -14,7 +14,7 @@
 		<%if (typeof sourceinfo!='undefined'){%>
 		<%=sourceinfo.filename%>:<%=sourceinfo.line%>
 		<%}else{%>
-		Open
+		Open <%=head%>
 		<%}%>
 		</span>
 	<%}%>
@@ -25,12 +25,14 @@
 		<slot expandable="true" newslot="-2" n="<%=slot-1%>">..more..</slot>
 		<%}%>
 		<%if (showscore){%>
+		<!--
 		<div class="progress">
 		  <div class="progress-bar progress-bar-<%=scoreclass%>" role="progressbar" aria-valuenow="<%=(score*100).toFixed(0)+'%'%>" aria-valuemin="0" aria-valuemax="100" style="width: <%=(score*100).toFixed(0)+'%'%>">
 		    <span class="sr-only"><%=(score*100).toFixed(0)+'%'%></span>
 		  </div>
 		</div>
-
+		//-->
+		<span class="sr-only"><%=(score*100).toFixed(0)+'%'%></span>
 		<%}%>
 	</div>
 	</div>

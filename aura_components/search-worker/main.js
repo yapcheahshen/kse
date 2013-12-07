@@ -21,7 +21,7 @@ define(['backbone'], function(Backbone) {
     },
     dosearch:function(start) {
       var M=this.model.get.bind(this.model);
-      var closesttag=[M("pagebreak"),'readunit[id]','p[n]'];
+      var closesttag=['readunit[id]'];
       var output=["text","sourceinfo"];
 
       var opts={query:M("query"),output:output,rank:M("rank")||"vsm",
