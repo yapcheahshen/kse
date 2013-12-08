@@ -28,7 +28,7 @@ define(['underscore','backbone',
     },
     closerelated:function(e) {
       $e=$(e.target).parent().parent();
-      $e.html('<a class="btn btn-info">'+$e.data('db')+'</a>');
+      $e.html('<a class="btn btn-link">'+$e.data('db')+'</a>');
     },
     showrelated:function(e) {
       $e=$(e.target).parent();
@@ -92,7 +92,7 @@ define(['underscore','backbone',
     },
     insertParagraphMenu:function() {
       var paragraphs=this.$(this.cssselector+']');
-      paragraphs.append("<span id='paramenu'></span>");
+      paragraphs.append("<span id='paramenu'><br/><a class='btn btn-link'>&nbsp</a></span>");
     },
     enterpara:function(e) {
       $e=$(e.target);
@@ -105,14 +105,14 @@ define(['underscore','backbone',
         var o={}; //find other db with same p[n]
         var value=$e.attr("n");
         var selector = [this.start,this.cssselector+'='+value];
-        var opts={db:this.db,selector:selector,local:true};
+        var opts={db:this.db,selector:selector};
         var promise=this.$yase("sameId",opts);
         promise.done(function(data){
           $e.find("#paramenu").html(_.template(menutemplate,{selector:selector.join(","),dbs:data}));
         })
         menu.data('loaded',true);
       }
-      menu.fadeIn();
+      menu.css('visibility','visible');
     },   
     leavepara:function(e)  {
       $e=$(e.target);
@@ -120,7 +120,7 @@ define(['underscore','backbone',
         $e=$e.parent();
       }
       if ($e.find(".openedrelated").length==0) { //no opened related text
-        $e.find("#paramenu").fadeOut();  
+        $e.find("#paramenu").css('visibility','hidden');
       }
       
     },
