@@ -9,7 +9,7 @@ define(['underscore','backbone','text!./text.tmpl','text!../config.json'],
       extra:{readtext:this.config.defaulttextwidget,
         query:opts.query,
         dbselector:this.config.dbselector||"select-db@kse",
-        scrollto:opts.scrollto,db:opts.db,start:opts.start}};
+    	scrollto:opts.scrollto,db:opts.db,start:opts.start,paramenu:opts.paramenu}};
       this.sandbox.emit("newtab",opts2);
     },
     initialize: function() {

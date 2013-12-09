@@ -58,12 +58,13 @@ define(['underscore','backbone',
         selector:this.start,query:this.query, maxslot:5000},
         function(err,data){
           that.$(".bodytext").html(_.template(texttemplate,data));
-          that.insertParagraphMenu();
+          if (that.paramenu) that.insertParagraphMenu();
           if (!that.scrollto) return;
 
           setTimeout(function(){
             var offset=that.$el.find(that.scrollto).offset() || {top:0};
-            that.$el.animate({
+
+            that.$(".bodytext").animate({
                 scrollTop: offset.top-100
             },'slow',function(){
                that.blink(that.$el.find(that.scrollto));  
@@ -80,6 +81,7 @@ define(['underscore','backbone',
       this.query=opts.query;
       this.scrollto=opts.scrollto;
       this.db=opts.db;
+      this.paramenu=opts.paramenu;
       this.fetchbytag();
     },   
     tabinit:function(opts) {
