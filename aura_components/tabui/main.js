@@ -21,6 +21,15 @@ define(['underscore','backbone',
       var tabid=tab.attr('href').substring(1);
       this.remove(tabid);
     },
+    removechildviewbytabid:function(tabid) {
+      for (var i in this.sandbox._children) {
+        var C=this.sandbox._children[i];
+        if (C._component.id==tabid) {
+          this.sandbox._children.splice(i,1)
+          this.sandbox.stop.call(C);
+        }
+      }
+    },
     remove:function(tabid) {
       var tab=this.$el.find("#tabs a[href='#"+tabid+"']");
       if (!tab) {
@@ -28,15 +37,14 @@ define(['underscore','backbone',
         return;
       }      
       var content=this.$el.find("#tabuicontent #"+tabid);
-
-      var view=content.find("[data-aura-component]").data('hview');
-      if (view) view.close();
+      this.removechildviewbytabid(tabid);
       content.remove();
       
       tab.remove();
       var model=this.tabs.get(tabid.substring(1));
       this.tabs.remove(model);
       $('#tabs a:last').tab('show');
+
     },
     removetab:function(m)   {
       this.remove('T'+m.cid);

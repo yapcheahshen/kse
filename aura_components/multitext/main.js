@@ -10,6 +10,7 @@ define(['underscore','backbone',
     events: {
       "mouseenter p[n]":"enterpara",
       "mouseleave p[n]":"leavepara",
+      "click pb":"clickonpb",
       "click .relatedtext":"showrelated",
       "click .closerelated":"closerelated",
       "mouseup .bodytext":"checkselection",
@@ -18,6 +19,13 @@ define(['underscore','backbone',
     commands:{
        "tabinit":"tabinit", 
        "settext":"settext"
+    },
+    gopb:function($e) {
+      var val={id:$e.attr('id'),n:$e.attr('n'),ed:$e.attr('ed')};
+      this.sendParent("pbclicked",val);
+    },
+    clickonpb:function(e) {
+      this.gopb($(e.target));
     },
     checkselection:function(e)  {
       var sel = this.sandbox.rangy.getSelection().toHtml();
@@ -51,6 +59,10 @@ define(['underscore','backbone',
             opacity: 1,
           }, 1000 );
     },
+    fetchfirstimage:function() {
+      var pb=this.$(".bodytext").find("pb");
+      this.gopb(pb);
+    },
 
     fetchbytag:function() {
       var that=this;
@@ -60,7 +72,7 @@ define(['underscore','backbone',
           that.$(".bodytext").html(_.template(texttemplate,data));
           if (that.paramenu) that.insertParagraphMenu();
           if (!that.scrollto) return;
-
+          that.fetchfirstimage();
           setTimeout(function(){
             var offset=that.$el.find(that.scrollto).offset() || {top:0};
 
@@ -74,6 +86,7 @@ define(['underscore','backbone',
     },
     settext:function(opts) {
       if (!opts) return;
+      this.model.set(opts);
       this.$(".bodytext").html("loading text..." );
       this.start=opts.start;
       this.cssselector=opts.scrollto.substring(0,opts.scrollto.indexOf("="));
@@ -85,12 +98,11 @@ define(['underscore','backbone',
       this.fetchbytag();
     },   
     tabinit:function(opts) {
-      this.model.set(opts);
       this.settext(opts)
     },
     getheight:function() {
       var p=$(".mainview");
-      return p.height()-this.$el.offset().top-20;      
+      return p.height()-this.$el.offset().top-20 - (this.options.space||0);
     },
     insertParagraphMenu:function() {
       var paragraphs=this.$(this.cssselector+']');
