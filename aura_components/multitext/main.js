@@ -31,7 +31,7 @@ define(['underscore','backbone',
       var sel = this.sandbox.rangy.getSelection().toHtml();
       sel=sel.replace(/<.*?>/g,'').trim();
       if (sel.indexOf(' ')==-1 &&sel) {
-        this.sendChildren("selectword",sel);
+        this.sandbox.emit("selectword",sel);
       }
     },
     closerelated:function(e) {
